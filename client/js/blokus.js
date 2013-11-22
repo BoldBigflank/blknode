@@ -1,3 +1,4 @@
+var chosenPieceId;
 var chosenPiece;
 
 window.onload = function () {
@@ -51,7 +52,7 @@ function choosePiece(event) {
 			&& y >= canvasLocation.y 
 			&& x <= canvasLocation.x + canvasLocation.size * 20
 			&& y <= canvasLocation.y + canvasLocation.size * 20 ) {
-				chosenPiece = available[i];
+				chosenPieceId = i;
 				break;
 			}
 	}
@@ -82,9 +83,21 @@ function getLocation(event) {
 	var x = Math.floor( ( event.pageX - boardElem.offsetLeft ) / 20 );
 	var y = Math.floor( ( event.pageY - boardElem.offsetTop ) / 20 );
 
-	if ( chosenPiece ) {
+
+	if ( chosenPieceId ) {
+		chosenPiece = available[chosenPieceId];
+
+					context.fillStyle = chosenPiece[0].color;
+					for ( var i = 0; i < chosenPiece.length; i++ ) {
+						var point = chosenPiece[i];
+						var xLoc = x + point.x;
+						var yLoc = y + point.y;
+						context.fillRect(xLoc*20, yLoc*20, 20, 20);
+			
+					}					
 
 		// check if move is legal
+		/*
 		socket.emit('addPiece', 
 			{piece: 1, placement: [{x: 0, y: 0}], function(error) {
 				if (error) {
@@ -100,9 +113,10 @@ function getLocation(event) {
 			
 					}					
 				}
-			});
+			}
+		);
+		*/
 
-		}
     }
 }
 
