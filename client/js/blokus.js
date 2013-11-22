@@ -13,6 +13,35 @@ window.onload = function () {
    boardElem.onclick = getLocation;
    pieceChoices.onclick = choosePiece;
 }
+
+
+	    var colors = ['green', 'blue', 'orange', 'yellow'];
+
+	    var available = [
+			[{'x':0, 'y':0}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':1, 'y':1}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':2, 'y':0}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':0, 'y':1}, {'x':1, 'y':1}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':2, 'y':0}, {'x':1, 'y':1}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':2, 'y':0}, {'x':3, 'y':0}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':2, 'y':0}, {'x':2, 'y':1}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':1, 'y':1}, {'x':2, 'y':1}],
+			[{'x':0, 'y':0}, {'x':0, 'y':1}, {'x':1, 'y':0}, {'x':2, 'y':0}, {'x':3, 'y':0}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':1, 'y':1}, {'x':1, 'y':2}, {'x':2, 'y':0}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':2, 'y':0}, {'x':0, 'y':1}, {'x':0, 'y':2}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':1, 'y':1}, {'x':2, 'y':1}, {'x':3, 'y':1}],
+			[{'x':0, 'y':0}, {'x':0, 'y':1}, {'x':1, 'y':1}, {'x':2, 'y':1}, {'x':2, 'y':2}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':2, 'y':0}, {'x':3, 'y':0}, {'x':4, 'y':0}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':0, 'y':1}, {'x':1, 'y':1}, {'x':0, 'y':2}],
+			[{'x':0, 'y':0}, {'x':0, 'y':1}, {'x':1, 'y':1}, {'x':1, 'y':2}, {'x':2, 'y':2}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':0, 'y':1}, {'x':0, 'y':2}, {'x':1, 'y':2}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':1, 'y':1}, {'x':1, 'y':2}, {'x':2, 'y':1}],
+			[{'x':1, 'y':0}, {'x':0, 'y':1}, {'x':1, 'y':1}, {'x':2, 'y':1}, {'x':1, 'y':2}],
+			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':1, 'y':1}, {'x':2, 'y':0}, {'x':3, 'y':0}]
+		];
+
+	    // where each piece appers on the 'choose piece' canvas
 	    var pieceCanvasLocation = [
 	    {'x':20, 'y':10, 'size':1},
 	    {'x':90, 'y':10, 'size':2},
@@ -115,7 +144,7 @@ function getLocation(event) {
 function drawPieceList(){
 	var pieceChoices = document.getElementById('pieceChoices');
 	var pieceContext = pieceChoices.getContext('2d');
-	var context = boardElem.getContext('2d');
+	pieceContext.clearRect(0, 0, pieceChoices.width, pieceChoices.height)
 	for ( var i = 0; i < available.length; i++ ) {
 		var piece = available[i];
 		pieceContext.fillStyle = colors[2];
@@ -131,32 +160,6 @@ function drawPieceList(){
 		}
 	}
 }
-
-	    var colors = ['green', 'blue', 'orange', 'yellow'];
-
-	    var available = [
-			[{'x':0, 'y':0}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':1, 'y':1}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':2, 'y':0}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':0, 'y':1}, {'x':1, 'y':1}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':2, 'y':0}, {'x':1, 'y':1}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':2, 'y':0}, {'x':3, 'y':0}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':2, 'y':0}, {'x':2, 'y':1}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':1, 'y':1}, {'x':2, 'y':1}],
-			[{'x':0, 'y':0}, {'x':0, 'y':1}, {'x':1, 'y':0}, {'x':2, 'y':0}, {'x':3, 'y':0}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':1, 'y':1}, {'x':1, 'y':2}, {'x':2, 'y':0}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':2, 'y':0}, {'x':0, 'y':1}, {'x':0, 'y':2}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':1, 'y':1}, {'x':2, 'y':1}, {'x':3, 'y':1}],
-			[{'x':0, 'y':0}, {'x':0, 'y':1}, {'x':1, 'y':1}, {'x':2, 'y':1}, {'x':2, 'y':2}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':2, 'y':0}, {'x':3, 'y':0}, {'x':4, 'y':0}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':0, 'y':1}, {'x':1, 'y':1}, {'x':0, 'y':2}],
-			[{'x':0, 'y':0}, {'x':0, 'y':1}, {'x':1, 'y':1}, {'x':1, 'y':2}, {'x':2, 'y':2}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':0, 'y':1}, {'x':0, 'y':2}, {'x':1, 'y':2}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':1, 'y':1}, {'x':1, 'y':2}, {'x':2, 'y':1}],
-			[{'x':1, 'y':0}, {'x':0, 'y':1}, {'x':1, 'y':1}, {'x':2, 'y':1}, {'x':1, 'y':2}],
-			[{'x':0, 'y':0}, {'x':1, 'y':0}, {'x':1, 'y':1}, {'x':2, 'y':0}, {'x':3, 'y':0}]
-		];
 
 
 	    function drawPiece(index) {
@@ -180,6 +183,7 @@ function drawPieceList(){
 		    
 	    };
 
+/*
 	    function drawAllPieces() {
 		    $( "#pieceChoice" ).empty();
 			for( var i = 0; i < available.length; i++ ) {
@@ -187,9 +191,10 @@ function drawPieceList(){
 				drawPiece(i);
 			}
 	    };
+	    */
 
-	    function rotate(index) {
-	    	var pieceToChange = available[index];
+	    function rotate() {
+	    	var pieceToChange = available[chosenPieceId];
 	    	var replacementPiece = [];
 	    	var minX = pieceToChange.length;
 	    	var minY = pieceToChange.length;
@@ -203,17 +208,17 @@ function drawPieceList(){
 		    		replacementPiece[i].x = replacementPiece[i].x - minX;
 		    	}
 	    	}
-	    	available[index] = replacementPiece;
-	    	drawAllPieces();
+	    	available[chosenPieceId] = replacementPiece;
+	    	drawPieceList();
 	    };
 
-	    function flip(index) {
-	    	var pieceToChange = available[index];
+	    function flip() {
+	    	var pieceToChange = available[chosenPieceId];
 	    	var replacementPiece = [];
 	    	for ( var i = 0; i < pieceToChange.length; i++ ) {
 		    	var point = pieceToChange[i];
 		    	replacementPiece.push( {'x':point.y, 'y':point.x } );
 	    	}
-	    	available[index] = replacementPiece;
-	    	drawAllPieces();
+	    	available[chosenPieceId] = replacementPiece;
+	    	drawPieceList();
 	    };

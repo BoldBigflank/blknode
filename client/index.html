@@ -35,6 +35,7 @@
 				<canvas id="boardCanvas" width="400" height="400" onclick="getLocation()">
 					Your browser does not support canvas.
 				</canvas>
+				<a href="#" onclick="javascript:flip();">Flip</a><a href="#" onclick="javascript:rotate();">Rotate</a>
 				<canvas id="pieceChoices" width="800" height="300">
 					Your browser does not support canvas.
 				</canvas>
@@ -44,9 +45,6 @@
 			</p>
 		</div>
 		
-		<script>
-			drawAllPieces();
-		</script>
 		<script>
 		var boardElem = document.getElementById('boardCanvas');
 
