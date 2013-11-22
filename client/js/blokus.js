@@ -144,19 +144,21 @@ function getLocation(event) {
 	var y = Math.floor( 19 - ( event.pageY - boardElem.offsetTop ) / 20 );
 
 
-	var thisPiece = available[chosenPieceId].slice(0);;
+	var thisPiece = available[chosenPieceId];
+	var pieceLocation = [];
 	if( thisPiece ) {
 		for ( var i = 0; i < thisPiece.length; i++ ) {
-			thisPiece[i].x = thisPiece[i].x + x;
-			thisPiece[i].y = y - thisPiece[i].y;
+			pieceLocation[i] = {};
+			pieceLocation[i].x = thisPiece[i].x + x;
+			pieceLocation[i].y = y - thisPiece[i].y;
 		}
 		
 
 		// check if move is legal
 		console.log(chosenPieceId);
-		console.log(thisPiece);
-		console.log({ piece: chosenPieceId, placement: thisPiece });
-		socket.emit('addPiece', { piece: chosenPieceId, placement: thisPiece }, 
+		console.log(pieceLocation);
+		console.log({ piece: chosenPieceId, placement: pieceLocation });
+		socket.emit('addPiece', { piece: chosenPieceId, placement: pieceLocation }, 
 			function(error) {
 				if (error) {
 				console.log(error);
