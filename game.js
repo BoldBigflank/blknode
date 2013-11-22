@@ -5,8 +5,13 @@ var EventEmitter = require('events').EventEmitter;
 
 exports.eventEmitter = new EventEmitter();
 
+var newBoard = function(){
+    var a = []; while(a.push([]) < 20);
+    return a;
+}
+
 var game = {
-    board:[20][20],
+    board:null,
     players:[],
     turn:null,
     state:"prep"
@@ -17,9 +22,10 @@ var answers = []
 var names
 var questions
 
+
 var init = function(cb){
     game = {
-        board:[20][20],
+        board:newBoard(),
         players:[],
         turn:null,
         state:"prep"
@@ -80,13 +86,13 @@ newRound = function(cb){
     //     answers = dataArray.splice(1);
     //     game.count = answers.length
 
-    // Pick the beginning time
-    var now = new Date().getTime(); // Milliseconds
-    var begin = now + prepTime;
-    game.begin = begin;
+    // // Pick the beginning time
+    // var now = new Date().getTime(); // Milliseconds
+    // var begin = now + prepTime;
+    // game.begin = begin;
 
-    var end = begin + roundTime;
-    game.end = end;
+    // var end = begin + roundTime;
+    // game.end = end;
 
     // game.title = ""
 
@@ -113,7 +119,7 @@ exports.join = function(uuid, cb){
         cb("UUID not found")
         return
     }
-    game.now = new Date().getTime()
+    // game.now = new Date().getTime()
     var player = _.find(game.players, function(player){ return player.id == uuid })
     if( typeof player === 'undefined'){
         var player = {
@@ -183,7 +189,7 @@ exports.setState = function(state, cb){
 
     // entry, vote, result
     game.state = state
-    game.now = new Date().getTime()
+    // game.now = new Date().getTime()
     if(state=="prep"){ // New round
         // game.help = "Be prepared to list answers that fit the following category."
         newRound(function(){
