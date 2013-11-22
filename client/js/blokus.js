@@ -64,8 +64,7 @@ window.onload = function () {
 	    {'x':130, 'y':230, 'size':5},
 	    {'x':250, 'y':230, 'size':5},
 	    {'x':370, 'y':230, 'size':5},
-	    {'x':490, 'y':230, 'size':5},
-	    {'x':610, 'y':230, 'size':5}
+	    {'x':490, 'y':210, 'size':5}
 	    ];
 
 function getMaxDimension(piece){
