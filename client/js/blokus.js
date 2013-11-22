@@ -1,5 +1,3 @@
-var piece1 = [{color: "Blue"}, {x:0,y:0},{x:0,y:1},{x:0,y:2},{x:1,y:1}];
-var piece2 = [{color: "Red"}, {x:0,y:0},{x:0,y:1}];
 var chosenPiece;
 
 window.onload = function () {
@@ -14,6 +12,30 @@ window.onload = function () {
    boardElem.onclick = getLocation;
    pieceChoices.onclick = choosePiece;
 }
+	    var pieceCanvasLocation = [
+	    {'x':20, 'y':10, 'size':1},
+	    {'x':90, 'y':10, 'size':2},
+	    {'x':170, 'y':10, 'size':3},
+	    {'x':250, 'y':10, 'size':3},
+	    {'x':330, 'y':10, 'size':4},
+	    {'x':410, 'y':10, 'size':4},
+	    {'x':510, 'y':10, 'size':4},
+	    {'x':610, 'y':10, 'size':4},
+	    {'x':710, 'y':10, 'size':4},
+	    {'x':10, 'y':110, 'size':5},
+	    {'x':130, 'y':110, 'size':5},
+	    {'x':250, 'y':110, 'size':5},
+	    {'x':370, 'y':110, 'size':5},
+	    {'x':490, 'y':110, 'size':5},
+	    {'x':610, 'y':110, 'size':5},
+	    {'x':730, 'y':110, 'size':5},
+	    {'x':10, 'y':230, 'size':5},
+	    {'x':130, 'y':230, 'size':5},
+	    {'x':250, 'y':230, 'size':5},
+	    {'x':370, 'y':230, 'size':5},
+	    {'x':490, 'y':230, 'size':5},
+	    {'x':610, 'y':230, 'size':5}
+	    ];
 
 function choosePiece(event) {
 	var boardElem = document.getElementById('boardCanvas');
@@ -64,45 +86,28 @@ function getLocation(event) {
 			var xLoc = x + point.x;
 			var yLoc = y + point.y;
 			context.fillRect(xLoc*20, yLoc*20, 20, 20);
-			
 		}
-		
 	}
 }
 
 //Draw Piece List Function
 function drawPieceList(){
-	var boardElem = document.getElementById('boardCanvas');
 	var pieceChoices = document.getElementById('pieceChoices');
 	var pieceContext = pieceChoices.getContext('2d');
 	var context = boardElem.getContext('2d');
-	
-	//Draw separator line on piece list.
-	pieceContext.moveTo(200, 0);
-	pieceContext.lineTo(200, 100);
-	pieceContext.stroke();
-
-	//Draw first piece on piece list.
-	pieceContext.fillStyle = piece1[0].color;
-	for ( var i = 1; i < piece1.length; i++ ) {
-		var point = piece1[i];
-		var x = 5;
-		var y = 1;
-		
-		var xLoc = x + point.x;
-		var yLoc = y + point.y;
-		pieceContext.fillRect(xLoc*20, yLoc*20, 20, 20);			
-	}
-
-	//Draw second piece on piece list.
-	pieceContext.fillStyle = piece2[0].color;
-	for ( var i = 1; i < piece2.length; i++ ) {
-		var point = piece2[i];
-		var x = 15;
-		var y = 1;
-		
-		var xLoc = x + point.x;
-		var yLoc = y + point.y;
-		pieceContext.fillRect(xLoc*20, yLoc*20, 20, 20);
+	for ( var i = 0; i < available.length; i++ ) {
+		var piece = available[i];
+		console.log(piece.length);
+		pieceContext.fillStyle = colors[2];
+		for ( var j = 0; j < piece.length; j++ ) {
+			var point = piece[j];
+			var canvasLocation = pieceCanvasLocation[i];
+			var x = canvasLocation.x;
+			var y = canvasLocation.y;
+			
+			var xLoc = x + ( point.x * 20 );
+			var yLoc = y + ( point.y * 20 );
+			pieceContext.fillRect(xLoc, yLoc, 20, 20);			
+		}
 	}
 }

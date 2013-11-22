@@ -41,7 +41,6 @@
 
 
 	    function drawPiece(index) {
-	    console.log(index);
 	    	var maxSize = available[index].length;
 
 			for ( var i = 0; i < maxSize; i++ ) {
@@ -121,9 +120,9 @@
 			<h1>Welcome to Polyominus</h1>
 			<p>
 				<canvas id="boardCanvas" width="400" height="400" onclick="getLocation()">
-				Fallback content, in case the browser does not support Canvas.
+					Your browser does not support canvas.
 				</canvas>
-				<canvas id = "pieceChoices" width="400" height = "100">
+				<canvas id="pieceChoices" width="800" height="300">
 					Your browser does not support canvas.
 				</canvas>
 				<div class="status hidden alert alert-info">...</div>
