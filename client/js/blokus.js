@@ -1,5 +1,6 @@
 var chosenPieceId;
 var chosenPiece;
+var completeBoard;
 
 window.onload = function () {
 	var boardElem = document.getElementById('boardCanvas');
@@ -108,13 +109,17 @@ function choosePiece(event) {
 				
 function drawGrid() {
 	var boardElem = document.getElementById('boardCanvas');
-	var pieceChoices = document.getElementById('pieceChoices');
-	var pieceContext = pieceChoices.getContext('2d');
-	var context = boardElem.getContext('2d');
+	var boardContext = boardElem.getContext('2d');
+	boardContext.clearRect(0, 0, boardElem.width, boardElem.height);
+
 	
 	for ( var i = 0; i < 20; i++ ) {
 		for ( var j = 0; j < 20; j++ ) {
-			context.strokeRect(i*20, j*20, 20, 20);
+			boardContext.strokeRect(i*20, j*20, 20, 20);
+			if ( completeBoard && completeBoard[i][j] ) {
+				boardContext.fillStyle = colors[completeBoard[i][j]];
+				boardContext.fillRect(i*20, j*20, 20, 20);
+			}
 		}
 	}	
 }
@@ -131,18 +136,17 @@ function getLocation(event) {
 	var y = Math.floor( ( event.pageY - boardElem.offsetTop ) / 20 );
 
 
-	if ( chosenPieceId ) {
-		chosenPiece = available[chosenPieceId];
-
+	chosenPiece = available[chosenPieceId];
+	if( chosenPiece ) {
 
 		// check if move is legal
-		socket.emit('addPiece', { piece: 1, placement: [ {x: 0, y: 0} ] }, 
+		socket.emit('addPiece', { piece: chosenPieceId, placement: [ chosenPiece ] }, 
 			function(error) {
 				if (error) {
 					alert('you fucked up');
 				}
 				else {
-					context.fillStyle = chosenPiece[0].color;
+					//context.fillStyle = chosenPiece[0].color; - use this player color, not piece color
 					for ( var i = 0; i < chosenPiece.length; i++ ) {
 						var point = chosenPiece[i];
 						var xLoc = x + point.x;
@@ -153,7 +157,7 @@ function getLocation(event) {
 				}
 			}
 		);
-    }
+	}
 }
 
 
@@ -164,8 +168,9 @@ function drawPieceList(){
 	var pieceContext = pieceChoices.getContext('2d');
 	pieceContext.clearRect(0, 0, pieceChoices.width, pieceChoices.height);
 
-	if(chosenPieceId) {
-		var canvasLocation = pieceCanvasLocation[chosenPieceId];
+	var canvasLocation = pieceCanvasLocation[chosenPieceId];
+	if ( canvasLocation ) {
+			
 		var thisPiece = available[chosenPieceId];
 		pieceContext.strokeRect(canvasLocation.x - 5, canvasLocation.y - 5, getMaxDimension(thisPiece) * 20 + 10, getMaxDimension(thisPiece) * 20 + 10);
 	}
