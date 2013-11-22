@@ -63,7 +63,7 @@ if (boardElem && boardElem.getContext) {
 			    context.fillRect(xLoc*20, yLoc*20, 20, 20);
 				
 			}
-		    
+			socket.emit('addPiece', {'piece':chosenPiece,'location':{'x':x,'y':y}})		    
 	    }
 	}
 

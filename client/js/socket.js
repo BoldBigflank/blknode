@@ -18,3 +18,4 @@ socket.on('alert', function(message) {
 	console.log(message);
 	alert(message);
 });
+
