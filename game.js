@@ -1,6 +1,6 @@
 var _ = require('underscore')
   , fs = require('fs')
-
+  , pieces = require('./pieces')
 var EventEmitter = require('events').EventEmitter;
 
 exports.eventEmitter = new EventEmitter();
