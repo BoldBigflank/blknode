@@ -24,7 +24,6 @@ var init = function(cb){
     game = {
         board:newBoard(),
         players:[],
-        playerOrder:[0,1,2,3],
         turn:null,
         state:"prep"
     }
@@ -135,7 +134,6 @@ exports.join = function(uuid, cb){
         if(_.where(game.players, {state:'active'}).length == maxPlayers){
             game.state = 'active'
             // Add the players to playerOrder
-            game.playerOrder = []
             var playerNumber = 0;
             for( var i in game.players){
                 var player = game.players[i]
