@@ -3,7 +3,7 @@
 
 </head>
 <body>
-<canvas id="myCanvas" width="400" height="400">
+<canvas id="myCanvas" width="400" height="400" onclick="getLocation()">
 Fallback content, in case the browser does not support Canvas.
 </canvas>
 <script>
@@ -30,7 +30,18 @@ if (elem && elem.getContext) {
 		
 	} 
   }
+
+	function getLocation(event) {
+	    event = event || window.event;
+	
+	        x = Math.floor( ( event.pageX - elem.offsetLeft ) / 20 ),
+	        y = Math.floor( ( event.pageY - elem.offsetTop ) / 20 );
+	
+	    alert(x + ' ' + y);
+	}
+
 }
+
 </script>
 </body>
 </html>
