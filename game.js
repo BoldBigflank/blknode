@@ -139,7 +139,10 @@ exports.join = function(uuid, cb){
             var playerNumber = 0;
             for( var i in game.players){
                 var player = game.players[i]
-                if(player.state == 'active') player.position = playerNumber++;
+                if(player.state == 'active'){
+                    player.position = playerNumber++;
+                    player.name = "Player " + (player.position+1);
+                } 
             }
             game.turn = 0
         }
@@ -157,8 +160,10 @@ exports.leave = function(uuid, cb){
             game.state = "ended";
         }
         else { // Make sure it is an active person's turn
-            while(_.findWhere(game.players, {position:game.turn}).state != 'active'){
-                game.turn = (game.turn+1) % game.players.length;
+            if(game.state == 'active'){
+                while(_.findWhere(game.players, {position:game.turn}).state != 'active'){
+                    game.turn = (game.turn+1) % game.players.length;
+                }
             }
         }
         cb(null, {players: game.players, state: game.state})
