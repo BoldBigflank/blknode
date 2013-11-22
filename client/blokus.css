@@ -1,0 +1,9 @@
+body {
+	background-color: darkgray;
+	text-align: center;
+}
+
+#boardCanvas, #pieceChoices {
+	margin:auto;
+	background-color: white;
+}
