@@ -6,7 +6,7 @@ exports.eventEmitter = new EventEmitter();
 
 var newBoard = function(){
     var r = []; while(r.push(null) < 20); // Make a row of 20 0's
-    var a = []; while(a.push(r) < 20); // Make 20 rows
+    var a = []; while(a.push(r.slice(0)) < 20); // Make 20 rows
     return a;
 }
 
@@ -324,10 +324,13 @@ exports.addPiece = function(id, placement, piece, cb){
     }
 
     // Add the piece to the board
+    
     for(var i in placement){
         var piece = placement[i];
         game.board[piece.x][piece.y] = game.turn;
+
     }
+
     // Remove the piece from the user's bag
     player.pieces = _.without(player.pieces, piece)
     // player.pieces = _.reject(player.pieces, function(testPiece){
@@ -340,78 +343,6 @@ exports.addPiece = function(id, placement, piece, cb){
 
     cb(null, {board: game.board, players: game.players, turn: game.turn});
 }
-
-// exports.addAnswer = function(id, guess, cb){
-//     if(game.state != "active") return cb("Not accepting answers");
-
-//     var correctAnswer = (guess == game.correctAnswer)
-
-//     // var correctAnswer = _.find(answers, function(answer){
-//     //     return levenshtein.distance(guess, answer) < 2;
-//     // })
-    
-//     // Get the time difference for end
-//     var now = new Date().getTime();
-//     var guessScore = parseInt((game.end - now )/ 10);
-//     var player = _.find(game.players, function(p){ return p.id ==  id; });
-//     if( typeof player === 'undefined'){
-//         var player = {
-//             id: id
-//             , name: names.shift() || id
-//             , state: 'active'
-//         }
-//         game.players.push(player)
-//     }
-//     player.answer = guess
-//     player.answerScore = guessScore
-//     return cb("You have guessed " + guess + " for " + guessScore + " points.", {players:game.players})
-
-//     // If it's in the answers array and not in the answered array
-//     // if(correctAnswer){
-//     //     var correctIndex = _.indexOf(answers, correctAnswer)
-//     //     // If it's in the answered array
-//     //     if(_.where(game.answered, {index:correctIndex}).length > 0){
-//     //         // error 'already found'
-//     //         cb("This answer was already found")
-//     //         return;
-//     //     } else {
-//     //         // Add to answered array
-//     //         var ts = (new Date().getTime()) - game.begin;
-//     //         var answerObject = {
-//     //             index:correctIndex,
-//     //             text:correctAnswer,
-//     //             time: ts
-//     //         }
-            
-//     //         game.answered.push(answerObject);
-
-//     //         // Add to player's answers with timestamp
-//     //         var player = _.find(game.players, function(p){ return p.id ==  id; });
-//     //         if( typeof player === 'undefined'){
-//     //             var player = {
-//     //                 id: uuid
-//     //                 , name: names.shift() || uuid
-//     //                 , answers: []
-//     //                 , score: 0
-//     //                 , state: 'active'
-//     //             }
-//     //             game.players.push(player)
-//     //         }
-//     //         player.answers.push(correctIndex)
-//     //         game.players = _.sortBy(game.players, function(player){return -1 *  player.answers.length;});
-
-//     //         if(answers.length===game.answered.length) exports.setState('ended', function(err, res){
-//     //             exports.eventEmitter.emit('state', res)
-//     //         }) // End the game when all have been guessed
-//     //     }
-
-//     // } else {
-//     //     // error 'incorrect answer'
-//     //     cb(guess + " is incorrect.")
-//     //     return;
-//     // }
-//     // return cb(null, { answers: game.answered, players: game.players })
-// }
 
 exports.reset = function(cb){
     init()
