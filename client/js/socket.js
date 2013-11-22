@@ -18,6 +18,10 @@ socket.emit('join', function(playerObj){
 
 socket.on('game', function(gameObj){
 	game = _.extend(game, gameObj);
+	if ( game.board ) {
+		completeBoard = game.board;
+		drawGrid();
+	}
 	if(game.state == "prep")
 		$(".status").text("Waiting for more players to join").removeClass("hidden");
 	else if(game.state == "ended")

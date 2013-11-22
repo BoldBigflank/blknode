@@ -112,6 +112,14 @@ function drawGrid() {
 	var boardContext = boardElem.getContext('2d');
 	boardContext.clearRect(0, 0, boardElem.width, boardElem.height);
 
+	boardContext.fillStyle = colors[0];
+	boardContext.fillRect(-5, -5, 10, 10);
+	boardContext.fillStyle = colors[1];
+	boardContext.fillRect(395, -5, 10, 10);
+	boardContext.fillStyle = colors[2];
+	boardContext.fillRect(-5,395, 10, 10);
+	boardContext.fillStyle = colors[3];
+	boardContext.fillRect(395, 395, 10, 10);
 	
 	for ( var i = 0; i < 20; i++ ) {
 		for ( var j = 0; j < 20; j++ ) {
@@ -136,11 +144,16 @@ function getLocation(event) {
 	var y = Math.floor( ( event.pageY - boardElem.offsetTop ) / 20 );
 
 
-	chosenPiece = available[chosenPieceId];
-	if( chosenPiece ) {
+	var thisPiece = available[chosenPieceId];
+	if( thisPiece ) {
+		for ( var i = 0; i < thisPiece.length; i++ ) {
+			thisPiece[i].x = thisPiece[i].x + x;
+			thisPiece[i].y = thisPiece[i].y + y;
+		}
+		
 
 		// check if move is legal
-		socket.emit('addPiece', { piece: chosenPieceId, placement: [ chosenPiece ] }, 
+		socket.emit('addPiece', { piece: chosenPieceId, placement: thisPiece }, 
 			function(error) {
 				if (error) {
 					alert('you fucked up');
