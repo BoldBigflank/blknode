@@ -19,6 +19,7 @@ app.configure(function(){
   app.use(express.cookieParser());
   app.use(express.session({ secret: 'heres a secret for you' }));
   app.use(app.router);
+  app.use(express.static(__dirname + '/client'));
   app.use(express.static(__dirname + '/public'));
 });
 
@@ -36,7 +37,7 @@ app.configure('production', function(){
 //     res.redirect('http://dev.bold-it.com/quiztime'+req.url)
 // })
   app.get('/', function(req, res){
-    fs.readFile('public/index.html', function(err, page) {
+    fs.readFile('client/index.html', function(err, page) {
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.write(page);
             res.end();
