@@ -5,7 +5,7 @@ var EventEmitter = require('events').EventEmitter;
 exports.eventEmitter = new EventEmitter();
 
 var newBoard = function(){
-    var r = []; while(r.push(0) < 20); // Make a row of 20 0's
+    var r = []; while(r.push(null) < 20); // Make a row of 20 0's
     var a = []; while(a.push(r) < 20); // Make 20 rows
     return a;
 }
@@ -232,14 +232,21 @@ exports.setState = function(state, cb){
 function findFacingTile(tile){
     var x = tile.x;
     var y = tile.y;
+    console.log("(" + x + "," + y + ")" + (x+y) );
+
     // Above
-    if(y < boardHeight-1 && game.board[x][y+1] == game.turn ) return true;
+    console.log("above")
+    if(y < boardHeight-1 && game.board[x][y+1] === game.turn ) return true;
     // Below
-    if(y > 0 && game.board[x][y-1] == game.turn ) return true;
+    console.log("below")
+    if(y > 0 && game.board[x][y-1] === game.turn ) return true;
     // Right
-    if(x < boardWidth-1 && game.board[x+1][y] == game.turn ) return true;
+    console.log("left")
+    if(x < boardWidth-1 && game.board[x+1][y] === game.turn ) return true;
     // Right
-    if(x > 0 && game.board[x-1][y] == game.turn ) return true;
+    console.log("right")
+    if(x > 0 && game.board[x-1][y] === game.turn ) return true;
+    console.log("done")
     return false;
 }
 
@@ -248,19 +255,19 @@ function findDiagonalConnector(tile){
     var y = tile.y;
 
     // Starting positions
-    if( game.turn == 0 && x == 0             && y == gameHeight-1 )  return true;
-    if( game.turn == 1 && x == gameWidth-1   && y == gameHeight-1 )  return true;
-    if( game.turn == 2 && x == gameWidth-1   && y == 0 )             return true;
+    if( game.turn == 0 && x == 0             && y == boardHeight-1 )  return true;
+    if( game.turn == 1 && x == boardWidth-1   && y == boardHeight-1 )  return true;
+    if( game.turn == 2 && x == boardWidth-1   && y == 0 )             return true;
     if( game.turn == 3 && x == 0             && y == 0 )             return true;
 
     // Above left
-    if( x > 0 && y < boardHeight-1 && game.board[x+1][y-1] == game.turn ) return true;
+    if( x > 0 && y < boardHeight-1 && game.board[x+1][y-1] === game.turn ) return true;
     // Above right
-    if( x < boardWidth-1 && y < boardHeight-1 && game.board[x+1][y+1] == game.turn ) return true;
+    if( x < boardWidth-1 && y < boardHeight-1 && game.board[x+1][y+1] === game.turn ) return true;
     // Below left
-    if( x > 0  && y > 0 && game.board[x-1][y-1] == game.turn ) return true;
+    if( x > 0  && y > 0 && game.board[x-1][y-1] === game.turn ) return true;
     // Below right
-    if( x < boardWidth-1 && y > 0 && game.board[x+1][y-1] == game.turn ) return true;
+    if( x < boardWidth-1 && y > 0 && game.board[x+1][y-1] === game.turn ) return true;
     return false;
 }
 
@@ -282,14 +289,14 @@ exports.addPiece = function(id, placement, piece, cb){
     for( var i in placement){
         tile = placement[i]
         if ( findFacingTile( tile ) == true) {
-            cb("This placement has a facing tile at " + tile, null)
+            cb("This placement has a facing tile at " + tile.x + tile.y, null)
             return;
         };
         hasDiagonalConnector = hasDiagonalConnector || findDiagonalConnector(tile);
 
         // Make sure each position is open
-        if(game.board[tile.x][tile.y] != 0){
-            cb("This piece is overlapping at " + tile, null)
+        if(game.board[tile.x][tile.y] !== null){
+            cb("This piece is overlapping at " + tile.x + tile.y, null)
             return;
         }
 
@@ -301,6 +308,7 @@ exports.addPiece = function(id, placement, piece, cb){
 
     // Add the piece to the board
     for(var i in placement){
+        var piece = placement[i];
         game.board[piece.x][piece.y] = game.turn;
     }
     // Remove the piece from the user's bag
