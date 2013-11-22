@@ -1,120 +1,20 @@
 <html>
-<head>
-    <script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="js/socket.js"></script>
-	<LINK href="blokus.css" rel="stylesheet" type="text/css">
-</head>
-<body>
-<canvas id="boardCanvas" width="400" height="400" onclick="getLocation()">
-Fallback content, in case the browser does not support Canvas.
-</canvas>
-<br>
-<canvas id = "pieceChoices" width="400" height = "100" onclick="choosePiece()">
-Your browser does not support canvas.
-</canvas>
-<a href="#" onclick="javascript:choosePiece([{x:0,y:0},{x:0,y:1}])">
-<div>
-<p>choose 1x2</p>
-</div>
-</a>
-
-<a href="#" onclick="javascript:choosePiece([{x:0,y:0},{x:0,y:1},{x:0,y:2},{x:1,y:1}])">
-<div>
-<p>choose T</p>
-</div>
-</a>
-
-<script>
-
-var boardElem = document.getElementById('boardCanvas');
-var pieceChoices = document.getElementById('pieceChoices');
-var pieceContext = pieceChoices.getContext('2d');
-
-
-var piece1 = [{color: "Blue"}, {x:0,y:0},{x:0,y:1},{x:0,y:2},{x:1,y:1}];
-var piece2 = [{color: "Red"}, {x:0,y:0},{x:0,y:1}];
-
-if (boardElem && boardElem.getContext) {
-  pieceContext.fillStyle = "blue";
-  var context = boardElem.getContext('2d');
-  if (context) {
-    for ( var i = 0; i < 20; i++ ) {
-	  for ( var j = 0; j < 20; j++ ) {
-	    context.strokeRect(i*20, j*20, 20, 20);
-	  }
-	}
-  }
-//Draw separator line on piece list.
-	pieceContext.moveTo(200, 0);
-	pieceContext.lineTo(200, 100);
-	pieceContext.stroke();
 	
-//Draw first piece on piece list.
-  pieceContext.fillStyle = piece1[0].color;
-  for ( var i = 1; i < piece1.length; i++ ) {
-				var point = piece1[i];
-				var x = 5;
-				var y = 1;
-				
-				var xLoc = x + point.x;
-				var yLoc = y + point.y;
-			     pieceContext.fillRect(xLoc*20, yLoc*20, 20, 20);
-				
-			}
-//Draw second piece on piece list.
-pieceContext.fillStyle = piece2[0].color;
-  for ( var i = 1; i < piece2.length; i++ ) {
-	var point = piece2[i];
-	var x = 15;
-	var y = 1;
+	<head>
+		<link href="blokus.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
+		<script type="text/javascript" src="js/socket.js"></script>
+		<script type="text/javascript" src="js/blokus.js"></script>
+	</head>
 	
-	var xLoc = x + point.x;
-	var yLoc = y + point.y;
-	 pieceContext.fillRect(xLoc*20, yLoc*20, 20, 20);
-}
-			
-	var chosenPiece;
-
-	function getLocation(event) {
-	    event = event || window.event;
+	<body>
+		<canvas id="boardCanvas" width="400" height="400">
+			Your browser does not support canvas.
+		</canvas>
+		<br>
+		<canvas id = "pieceChoices" width="400" height = "100">
+			Your browser does not support canvas.
+		</canvas>
+	</body>
 	
-	        x = Math.floor( ( event.pageX - boardElem.offsetLeft ) / 20 ),
-	        y = Math.floor( ( event.pageY - boardElem.offsetTop ) / 20 );
-	
-	    if ( chosenPiece ) {
-			//Draw second piece on piece list.
-			context.fillStyle = chosenPiece[0].color;
-			for ( var i = 0; i < chosenPiece.length; i++ ) {
-				var point = chosenPiece[i];
-				var xLoc = x + point.x;
-				var yLoc = y + point.y;
-			    context.fillRect(xLoc*20, yLoc*20, 20, 20);
-				
-			}
-		    
-	    }
-	}
-	
-
-	function choosePiece(event) {
-		event = event || window.event;
-	
-		x = Math.floor( ( event.pageX - pieceChoices.offsetLeft ) / 20 ),
-		y = Math.floor( ( event.pageY - pieceChoices.offsetTop ) / 20 );
-		
-
-		
-		if (x < 10) {
-			chosenPiece = piece1;
-		}else if ( x >= 10) {		
-			chosenPiece = piece2;
-		}
-	}
-	
-	
-}
-
-
-</script>
-</body>
 </html>
