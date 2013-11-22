@@ -11,8 +11,13 @@ console.log(data);
 
 
 socket.emit('join', function(playerObj){
-	console.log("emitted join", playerObj)
+	console.log("emitted join", playerObj);
+	$(".username").text(playerObj.name);
 });
+
+socket.on('game', function(gameObj){
+	game = gameObj;
+})
 
 socket.on('alert', function(message) {
 	console.log(message);

@@ -1,105 +1,133 @@
+<!DOCTYPE html>
 <html>
 	<head>
+		<title>Polyominus</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 		<link href="blokus.css" rel="stylesheet" type="text/css">
+	
 		<script type="text/javascript" src="js/blokus.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
-    <script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="js/socket.js"></script>
-    <script>
-    var colors = ['green', 'blue', 'orange', 'yellow'];
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
+	    <script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
+	    <script type="text/javascript" src="js/socket.js"></script>
 
-    var available = [
-    [{'x':0,'y':0},{'x':0,'y':1},{'x':1,'y':1}],
-    [{'x':0,'y':0},{'x':0,'y':1},{'x':0,'y':2},{'x':1,'y':1}]
-    ];
+	    <script>
+	    var colors = ['green', 'blue', 'orange', 'yellow'];
+
+	    var available = [
+	    [{'x':0,'y':0},{'x':0,'y':1},{'x':1,'y':1}],
+	    [{'x':0,'y':0},{'x':0,'y':1},{'x':0,'y':2},{'x':1,'y':1}]
+	    ];
 
 
-    function drawPiece(index) {
-    console.log(index);
-    	var maxSize = available[index].length;
+	    function drawPiece(index) {
+	    console.log(index);
+	    	var maxSize = available[index].length;
 
-		for ( var i = 0; i < maxSize; i++ ) {
-			for ( var j = 0; j < maxSize; j++ ) {
-				$( "#link-" + index ).append( "<div id='piece-" + index + "-" + j + "-" + i + "' style='display: inline-block;width:20px;height:20px;' />" );
+			for ( var i = 0; i < maxSize; i++ ) {
+				for ( var j = 0; j < maxSize; j++ ) {
+					$( "#link-" + index ).append( "<div id='piece-" + index + "-" + j + "-" + i + "' style='display: inline-block;width:20px;height:20px;' />" );
+				}
+
+					$( "#link-" + index ).append( "<br/>");
 			}
+					$( "#link-" + index ).append( '<a href="#" onclick="javascript:flip(' + index + ');">Flip</a><a href="#" onclick="javascript:rotate(' + index + ');">Rotate</a>');
+					$( "#link-" + index ).append( "<br/>");
+			
+			for( var i = 0; i < available[index].length; i++ ) {
+				var thisBlock = available[index][i];
+				var element = document.getElementById('piece-' + index + '-' + thisBlock.x + '-' + thisBlock.y);
+				element.style.backgroundColor = colors[1];
+			}
+		    
+	    };
 
-				$( "#link-" + index ).append( "<br/>");
-		}
-				$( "#link-" + index ).append( '<a href="#" onclick="javascript:flip(' + index + ');">Flip</a><a href="#" onclick="javascript:rotate(' + index + ');">Rotate</a>');
-				$( "#link-" + index ).append( "<br/>");
-		
-		for( var i = 0; i < available[index].length; i++ ) {
-			var thisBlock = available[index][i];
-			var element = document.getElementById('piece-' + index + '-' + thisBlock.x + '-' + thisBlock.y);
-			element.style.backgroundColor = colors[1];
-		}
-	    
-    };
+	    function drawAllPieces() {
+		    $( "#pieceChoice" ).empty();
+			for( var i = 0; i < available.length; i++ ) {
+				$( "#pieceChoice" ).append( "<a id='link-" + i + "' href='#' onclick='javascript:choosePiece(" + i + ")'/>" );
+				drawPiece(i);
+			}
+	    };
 
-    function drawAllPieces() {
-	    $( "#pieceChoice" ).empty();
-		for( var i = 0; i < available.length; i++ ) {
-			$( "#pieceChoice" ).append( "<a id='link-" + i + "' href='#' onclick='javascript:choosePiece(" + i + ")'/>" );
-			drawPiece(i);
-		}
-    };
-
-    function rotate(index) {
-    	var pieceToChange = available[index];
-    	var replacementPiece = [];
-    	var minX = pieceToChange.length;
-    	var minY = pieceToChange.length;
-    	for ( var i = 0; i < pieceToChange.length; i++ ) {
-	    	var point = pieceToChange[i];
-	    	replacementPiece.push( {'x':pieceToChange.length - point.y, 'y':point.x } );
-	    	minX = Math.min( minX, pieceToChange.length - point.y );
-    	}
-    	if ( minX > 0 ) {
+	    function rotate(index) {
+	    	var pieceToChange = available[index];
+	    	var replacementPiece = [];
+	    	var minX = pieceToChange.length;
+	    	var minY = pieceToChange.length;
 	    	for ( var i = 0; i < pieceToChange.length; i++ ) {
-	    		replacementPiece[i].x = replacementPiece[i].x - minX;
+		    	var point = pieceToChange[i];
+		    	replacementPiece.push( {'x':pieceToChange.length - point.y, 'y':point.x } );
+		    	minX = Math.min( minX, pieceToChange.length - point.y );
 	    	}
-    	}
-    	available[index] = replacementPiece;
-    	drawAllPieces();
-    };
+	    	if ( minX > 0 ) {
+		    	for ( var i = 0; i < pieceToChange.length; i++ ) {
+		    		replacementPiece[i].x = replacementPiece[i].x - minX;
+		    	}
+	    	}
+	    	available[index] = replacementPiece;
+	    	drawAllPieces();
+	    };
 
-    function flip(index) {
-    	var pieceToChange = available[index];
-    	var replacementPiece = [];
-    	for ( var i = 0; i < pieceToChange.length; i++ ) {
-	    	var point = pieceToChange[i];
-	    	replacementPiece.push( {'x':point.y, 'y':point.x } );
-    	}
-    	available[index] = replacementPiece;
-    	drawAllPieces();
-    };
-    </script>
+	    function flip(index) {
+	    	var pieceToChange = available[index];
+	    	var replacementPiece = [];
+	    	for ( var i = 0; i < pieceToChange.length; i++ ) {
+		    	var point = pieceToChange[i];
+		    	replacementPiece.push( {'x':point.y, 'y':point.x } );
+	    	}
+	    	available[index] = replacementPiece;
+	    	drawAllPieces();
+	    };
+	    </script>
+	</head>
+	<body>
+		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	      <div class="container">
+	        <div class="navbar-header">
+	          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	            <span class="sr-only">Toggle navigation</span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	          </button>
+	          <a class="navbar-brand" href="#">Polyominus</a>
+	          
+	        </div>
+	        <p class="navbar-text navbar-right">Your name is <a href="#" class="username navbar-link">Username</a></p>
+	      </div>
+	    </div>
+		<div class="container">
+			<h1>Welcome to Polyominus</h1>
+			<p>
+				<canvas id="boardCanvas" width="400" height="400" onclick="getLocation()">
+				Fallback content, in case the browser does not support Canvas.
+				</canvas>
+				<canvas id = "pieceChoices" width="400" height = "100">
+					Your browser does not support canvas.
+				</canvas>
+				<div id="pieceChoice"/>
+			</p>
+		</div>
+		
+		<script>
+			drawAllPieces();
+		</script>
+		<script>
+		var boardElem = document.getElementById('boardCanvas');
 
-</head>
-<body>
-<canvas id="boardCanvas" width="400" height="400" onclick="getLocation()">
-Fallback content, in case the browser does not support Canvas.
-</canvas>
-		<canvas id = "pieceChoices" width="400" height = "100">
-			Your browser does not support canvas.
-		</canvas>
-<div id="pieceChoice"/>
-<script>
-	drawAllPieces();
-</script>
-
-
-<script>
-
-
-var boardElem = document.getElementById('boardCanvas');
-
-if (boardElem && boardElem.getContext) {
-  var context = boardElem.getContext('2d');
-  if (context) {
-    for ( var i = 0; i < 20; i++ ) {
-	  for ( var j = 0; j < 20; j++ ) {
-	    context.strokeRect(i*20, j*20, 20, 20);
-	  }
-	}
+		if (boardElem && boardElem.getContext) {
+			var context = boardElem.getContext('2d');
+		  	if (context) {
+		    	for ( var i = 0; i < 20; i++ ) {
+			  		for ( var j = 0; j < 20; j++ ) {
+			    		context.strokeRect(i*20, j*20, 20, 20);
+					}
+				}
+			}
+		}
+		</script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+	</body>
 </html>
