@@ -87,19 +87,10 @@ function getLocation(event) {
 	if ( chosenPieceId ) {
 		chosenPiece = available[chosenPieceId];
 
-					context.fillStyle = chosenPiece[0].color;
-					for ( var i = 0; i < chosenPiece.length; i++ ) {
-						var point = chosenPiece[i];
-						var xLoc = x + point.x;
-						var yLoc = y + point.y;
-						context.fillRect(xLoc*20, yLoc*20, 20, 20);
-			
-					}					
 
 		// check if move is legal
-		/*
-		socket.emit('addPiece', 
-			{piece: 1, placement: [{x: 0, y: 0}], function(error) {
+		socket.emit('addPiece', { piece: 1, placement: [ {x: 0, y: 0} ] }, 
+			function(error) {
 				if (error) {
 					alert('you fucked up');
 				}
@@ -115,8 +106,6 @@ function getLocation(event) {
 				}
 			}
 		);
-		*/
-
     }
 }
 
