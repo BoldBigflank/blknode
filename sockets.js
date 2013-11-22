@@ -43,17 +43,28 @@ module.exports.listen = function(app){
         })
       })
 
-      // Answer
-      socket.on('answer', function(answer){
-        // add the entry
+
+      // Playing a piece 
+      socket.on('addPiece', function(data){
         socket.get('uuid', function(err, uuid){
-          game.addAnswer(uuid, answer, function(err, res){
+          game.addPiece(uuid, data.location, data.piece, function(err, res){
             if (err) { socket.emit("alert", err) }
-            if(res) { io.sockets.emit("game", res ) }
-          })  
+            if (res) { io.sockets.emit("game", res)}
+          })
         })
-        
       })
+
+      // Answer
+      // socket.on('answer', function(answer){
+      //   // add the entry
+      //   socket.get('uuid', function(err, uuid){
+      //     game.addAnswer(uuid, answer, function(err, res){
+      //       if (err) { socket.emit("alert", err) }
+      //       if(res) { io.sockets.emit("game", res ) }
+      //     })  
+      //   })
+        
+      // })
 
       // State
       socket.on('state', function(data){
