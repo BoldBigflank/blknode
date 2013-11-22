@@ -126,7 +126,7 @@ exports.join = function(uuid, cb){
         game.players.push(player)
         if(game.players.length == 4){
             game.turn = 0,
-            game.state = active
+            game.state = 'active'
         }
     }
     cb(null, {players: game.players, turn: game.turn, state:game.state})
