@@ -192,6 +192,9 @@ function drawPieceList(){
 	for ( var i = 0; i < available.length; i++ ) {
 		var piece = available[i];
 		pieceContext.fillStyle = colors[2];
+		if ( playerPosition && playerPosition != -1 ) {
+			pieceContext.fillStyle = colors[playerPosition];
+		}
 		for ( var j = 0; j < piece.length; j++ ) {
 			var point = piece[j];
 			var canvasLocation = pieceCanvasLocation[i];
