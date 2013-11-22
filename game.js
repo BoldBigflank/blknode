@@ -144,9 +144,14 @@ exports.leave = function(uuid, cb){
     if(player){
         player.state = "disconnect";
         // If only one active player left, end the game
-        if(_.where(game.players, {state:'active'}).length == 1){
+        if(_.where(game.players, {state:'active'}).length <= 1){
             game.state = "ended";
         };
+        else { // Make sure it is an active person's turn
+            while(game.players[game.turn].state != 'active'){
+                game.turn = (game.turn+1) % game.players.length;
+            }
+        }
         cb(null, {players: game.players, state: game.state})
     }
     // game.players = _.without(game.players, player)
@@ -294,10 +299,10 @@ exports.addPiece = function(id, placement, piece, cb){
 
     do{
 
-        game.turn = game.turn+1 % game.players.length;
+        game.turn = (game.turn+1) % game.players.length;
     } while( game.players[game.turn].state != "active" )
 
-    game.turn = game.turn+1 % game.players.length;
+    game.turn = (game.turn+1) % game.players.length;
     cb(null, {board: game.board, players: game.players});
 }
 
