@@ -47,7 +47,7 @@ module.exports.listen = function(app){
       // Playing a piece 
       socket.on('addPiece', function(data){
         socket.get('uuid', function(err, uuid){
-          game.addPiece(uuid, data.location, data.piece, function(err, res){
+          game.addPiece(uuid, data.placement, data.piece, function(err, res){
             if (err) { socket.emit("alert", err) }
             if (res) { io.sockets.emit("game", res)}
           })

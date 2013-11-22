@@ -1,21 +1,18 @@
 var _ = require('underscore')
   , fs = require('fs')
-  , pieces = require('./pieces')
 var EventEmitter = require('events').EventEmitter;
 
 exports.eventEmitter = new EventEmitter();
 
 var newBoard = function(){
-    var a = []; while(a.push([]) < 20);
+    var r = []; while(r.push(0) < 20); // Make a row of 20 0's
+    var a = []; while(a.push(r) < 20); // Make 20 rows
     return a;
 }
 
-var game = {
-    board:null,
-    players:[],
-    turn:null,
-    state:"prep"
-} // prep, active, ended
+var game;
+var boardWidth;
+var boardHeight;
 
 var maxPlayers = 4;
 var answers = []
@@ -30,6 +27,8 @@ var init = function(cb){
         turn:null,
         state:"prep"
     }
+    boardWidth = game.board.length;
+    boardHeight = game.board[0].length;
     
     fs.readFile('names.txt', function(err, data) {
         if(err) throw err;
@@ -125,7 +124,7 @@ exports.join = function(uuid, cb){
         var player = {
             id: uuid
             , name: names.shift() || uuid
-            , pieces: pieces.bag
+            , pieces: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] 
             , status: 'active'
         }
 
@@ -217,7 +216,42 @@ exports.setState = function(state, cb){
     }
 }
 
-exports.addPiece = function(id, location, piece, cb){
+function findFacingTile(tile){
+    var x = tile.x;
+    var y = tile.y;
+    // Above
+    if(y < boardHeight-1 && game.board[x][y+1] == game.turn ) return true;
+    // Below
+    if(y > 0 && game.board[x][y-1] == game.turn ) return true;
+    // Right
+    if(x < boardWidth-1 && game.board[x+1][y] == game.turn ) return true;
+    // Right
+    if(x > 0 && game.board[x-1][y] == game.turn ) return true;
+    return false;
+}
+
+function findDiagonalConnector(tile){
+    var x = tile.x;
+    var y = tile.y;
+
+    // Starting positions
+    if( game.turn == 0 && x == 0             && y == gameHeight-1 )  return true;
+    if( game.turn == 1 && x == gameWidth-1   && y == gameHeight-1 )  return true;
+    if( game.turn == 2 && x == gameWidth-1   && y == 0 )             return true;
+    if( game.turn == 3 && x == 0             && y == 0 )             return true;
+
+    // Above left
+    if( x > 0 && y < boardHeight-1 && game.board[x+1][y-1] == game.turn ) return true;
+    // Above right
+    if( x < boardWidth-1 && y < boardHeight-1 && game.board[x+1][y+1] == game.turn ) return true;
+    // Below left
+    if( x > 0  && y > 0 && game.board[x-1][y-1] == game.turn ) return true;
+    // Below right
+    if( x < boardWidth-1 && y > 0 && game.board[x+1][y-1] == game.turn ) return true;
+    return false;
+}
+
+exports.addPiece = function(id, placement, piece, cb){
     // cb(err, res)
     if(game.players[game.turn].id !== id ){
         cb ("It is not your turn", null)
@@ -225,14 +259,30 @@ exports.addPiece = function(id, location, piece, cb){
     }
     var player = game.players[game.turn]
 
+    // Verify the suggested tile on the board
+    var hasDiagonalConnector = false;
+
+    for( var i in placement){
+        if ( findFacingTile( placement[i] ) == true) {
+            cb("This placement has a facing tile at " + placement[i], null)
+            return;
+        };
+        hasDiagonalConnector = hasDiagonalConnector || findDiagonalConnector(placement[i]);
+    }
+    if ( !hasDiagonalConnector ){
+        cb("This placement has no connecting tile diagonal from it", null);
+        return;
+    }
+
     // Add the piece to the board
-    for(var i in piece){
-        game.board[piece.x + location.x][piece.y + location.y] = game.turn;
+    for(var i in placement){
+        game.board[piece.x][piece.y] = game.turn;
     }
     // Remove the piece from the user's bag
-    player.pieces = _.reject(player.pieces, function(testPiece){
-        return (_.difference(piece, testPiece).length == 0)
-    }) 
+    player.pieces = _.without(player.pieces, piece)
+    // player.pieces = _.reject(player.pieces, function(testPiece){
+    //     return (_.difference(piece, testPiece).length == 0)
+    // }) 
 
     game.turn = game.turn+1 % maxPlayers;
     cb(null, {board: game.board, players: game.players});
