@@ -127,10 +127,10 @@ exports.join = function(uuid, cb){
             , pieces: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] 
             , state: 'active'
         }
-        if(game.players.length >= maxPlayers) player.state = 'spectating';
+        if(_.where(game.players, {state:'active'}).length >= maxPlayers) player.state = 'spectating';
 
         game.players.push(player)
-        if(game.players.length == 4){
+        if(_.where(game.players, {state:'active'}).length == maxPlayers){
             game.turn = 0,
             game.state = 'active'
         }
@@ -294,10 +294,10 @@ exports.addPiece = function(id, placement, piece, cb){
 
     do{
 
-        game.turn = game.turn+1 % maxPlayers;
+        game.turn = game.turn+1 % game.players.length;
     } while( game.players[game.turn].state != "active" )
 
-    game.turn = game.turn+1 % maxPlayers;
+    game.turn = game.turn+1 % game.players.length;
     cb(null, {board: game.board, players: game.players});
 }
 
