@@ -17,7 +17,7 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
-  app.use(express.session({ secret: 'heres a secret for you' }));
+  app.use(express.session({ secret: 'whisper whisper secret' }));
   app.use(app.router);
   app.use(express.static(__dirname + '/client'));
 });
