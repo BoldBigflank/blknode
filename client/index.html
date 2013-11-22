@@ -31,10 +31,11 @@ var pieceChoices = document.getElementById('pieceChoices');
 var pieceContext = pieceChoices.getContext('2d');
 
 
-var piece1 = [{x:0,y:0},{x:0,y:1},{x:0,y:2},{x:1,y:1}];
-var piece2 = [{x:0,y:0},{x:0,y:1}];
+var piece1 = [{color: "Blue"}, {x:0,y:0},{x:0,y:1},{x:0,y:2},{x:1,y:1}];
+var piece2 = [{color: "Red"}, {x:0,y:0},{x:0,y:1}];
 
 if (boardElem && boardElem.getContext) {
+  pieceContext.fillStyle = "blue";
   var context = boardElem.getContext('2d');
   if (context) {
     for ( var i = 0; i < 20; i++ ) {
@@ -49,7 +50,8 @@ if (boardElem && boardElem.getContext) {
 	pieceContext.stroke();
 	
 //Draw first piece on piece list.
-  for ( var i = 0; i < piece1.length; i++ ) {
+  pieceContext.fillStyle = piece1[0].color;
+  for ( var i = 1; i < piece1.length; i++ ) {
 				var point = piece1[i];
 				var x = 5;
 				var y = 1;
@@ -60,7 +62,8 @@ if (boardElem && boardElem.getContext) {
 				
 			}
 //Draw second piece on piece list.
-  for ( var i = 0; i < piece2.length; i++ ) {
+pieceContext.fillStyle = piece2[0].color;
+  for ( var i = 1; i < piece2.length; i++ ) {
 	var point = piece2[i];
 	var x = 15;
 	var y = 1;
@@ -79,6 +82,8 @@ if (boardElem && boardElem.getContext) {
 	        y = Math.floor( ( event.pageY - boardElem.offsetTop ) / 20 );
 	
 	    if ( chosenPiece ) {
+			//Draw second piece on piece list.
+			context.fillStyle = chosenPiece[0].color;
 			for ( var i = 0; i < chosenPiece.length; i++ ) {
 				var point = chosenPiece[i];
 				var xLoc = x + point.x;
