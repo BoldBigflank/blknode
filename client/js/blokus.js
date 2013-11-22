@@ -120,13 +120,14 @@ function drawGrid() {
 	boardContext.fillRect(-5,395, 10, 10);
 	boardContext.fillStyle = colors[3];
 	boardContext.fillRect(395, 395, 10, 10);
+	console.log(completeBoard);
 	
 	for ( var i = 0; i < 20; i++ ) {
 		for ( var j = 0; j < 20; j++ ) {
-			boardContext.strokeRect(i*20, j*20, 20, 20);
-			if ( completeBoard && completeBoard[i][j] ) {
+			boardContext.strokeRect(i*20, (19-j)*20, 20, 20);
+			if ( completeBoard && completeBoard[i][j] != null ) {
 				boardContext.fillStyle = colors[completeBoard[i][j]];
-				boardContext.fillRect(i*20, j*20, 20, 20);
+				boardContext.fillRect(i*20, (19-j)*20, 20, 20);
 			}
 		}
 	}	
