@@ -141,31 +141,28 @@ function getLocation(event) {
 	event = event || window.event;
 
 	var x = Math.floor( ( event.pageX - boardElem.offsetLeft ) / 20 );
-	var y = Math.floor( 19 - ( event.pageY - boardElem.offsetTop ) / 20 );
+	var y = Math.floor( 20 - ( event.pageY - boardElem.offsetTop ) / 20 );
 
 
-	var thisPiece = available[chosenPieceId].slice(0);;
-	if( thisPiece ) {
-		for ( var i = 0; i < thisPiece.length; i++ ) {
-			thisPiece[i].x = thisPiece[i].x + x;
-			thisPiece[i].y = y - thisPiece[i].y;
+	var thisPiece = [];
+	
+	if( chosenPieceId ) {
+		for ( var i = 0; i < available[chosenPieceId].length; i++ ) {
+			thisPiece.push({'x': available[chosenPieceId][i].x + x , 'y': y - available[chosenPieceId][i].y })
 		}
 		
 
 		// check if move is legal
-		console.log(chosenPieceId);
-		console.log(thisPiece);
 		console.log({ piece: chosenPieceId, placement: thisPiece });
 		socket.emit('addPiece', { piece: chosenPieceId, placement: thisPiece }, 
 			function(error) {
 				if (error) {
 				console.log(error);
-				alert(error);
 				}
 				else {
 					//context.fillStyle = chosenPiece[0].color; - use this player color, not piece color
-					for ( var i = 0; i < chosenPiece.length; i++ ) {
-						var point = chosenPiece[i];
+					for ( var i = 0; i < thisPiece.length; i++ ) {
+						var point = thisPiece[i];
 						var xLoc = x + point.x;
 						var yLoc = y + point.y;
 						context.fillRect(xLoc*20, yLoc*20, 20, 20);
