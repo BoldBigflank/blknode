@@ -27,7 +27,7 @@ var init = function(cb){
     
     fs.readFile('names.txt', function(err, data) {
         if(err) throw err;
-        names = _.shuffle(data.toString().split("\n"));
+        names = data.toString().split("\n");
     });
 }
 
