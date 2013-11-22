@@ -1,0 +1,76 @@
+<html>
+<head>
+
+</head>
+<body>
+<canvas id="boardCanvas" width="400" height="400" onclick="getLocation()">
+Fallback content, in case the browser does not support Canvas.
+</canvas>
+<a href="#" onclick="javascript:choosePiece([{x:0,y:0},{x:0,y:1}])">
+<div>
+<p>choose 1x2</p>
+</div>
+</a>
+
+<a href="#" onclick="javascript:choosePiece([{x:0,y:0},{x:0,y:1},{x:0,y:2},{x:1,y:1}])">
+<div>
+<p>choose T</p>
+</div>
+</a>
+
+<script>
+var boardElem = document.getElementById('boardCanvas');
+
+if (boardElem && boardElem.getContext) {
+  var context = boardElem.getContext('2d');
+  if (context) {
+    for ( var i = 0; i < 20; i++ ) {
+	  for ( var j = 0; j < 20; j++ ) {
+	    context.strokeRect(i*20, j*20, 20, 20);
+	  }
+	}
+	/*
+	var drawX = 6;
+	var drawY = 9;
+	var piece = [{x:0,y:0},{x:0,y:1}];
+	
+	for ( var i = 0; i < piece.length; i++ ) {
+		var point = piece[i];
+		var xLoc = drawX + point.x;
+		var yLoc = drawY + point.y;
+	    context.fillRect(xLoc*20, yLoc*20, 20, 20);
+		
+	}
+	*/
+  }
+
+	var chosenPiece;
+
+	function getLocation(event) {
+	    event = event || window.event;
+	
+	        x = Math.floor( ( event.pageX - boardElem.offsetLeft ) / 20 ),
+	        y = Math.floor( ( event.pageY - boardElem.offsetTop ) / 20 );
+	
+	    if ( chosenPiece ) {
+			for ( var i = 0; i < chosenPiece.length; i++ ) {
+				var point = chosenPiece[i];
+				var xLoc = x + point.x;
+				var yLoc = y + point.y;
+			    context.fillRect(xLoc*20, yLoc*20, 20, 20);
+				
+			}
+		    
+	    }
+	}
+
+	function choosePiece(piece) {
+		chosenPiece = piece;
+		
+	}
+}
+
+
+</script>
+</body>
+</html>
