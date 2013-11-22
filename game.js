@@ -266,7 +266,11 @@ function findDiagonalConnector(tile){
 
 exports.addPiece = function(id, placement, piece, cb){
     // cb(err, res)
-    if(game.state != "active" || game.players[game.turn].id !== id ){
+    if(game.state != "active"){
+        cb ("The game has not yet started. Get more friends.", null)
+        return;
+    } 
+    else if( game.players[game.turn].id !== id ){
         cb ("It is not your turn", null)
         return;
     }
