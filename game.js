@@ -146,7 +146,7 @@ exports.leave = function(uuid, cb){
         // If only one active player left, end the game
         if(_.where(game.players, {state:'active'}).length <= 1){
             game.state = "ended";
-        };
+        }
         else { // Make sure it is an active person's turn
             while(game.players[game.turn].state != 'active'){
                 game.turn = (game.turn+1) % game.players.length;
