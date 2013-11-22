@@ -304,6 +304,12 @@ exports.addPiece = function(id, placement, piece, cb){
             cb("Tile does not have a valid x and y coordinate", null)
             return;
         }
+        // Check for impossible values
+        if( x<0 || y < 0 || x >= boardWidth || y >= boardHeight  ){
+            cb("Tile is not on the game board", null)
+            return;
+        }
+
 
         if ( findFacingTile( tile ) == true) {
             cb("This placement has a facing tile at " + tile.x + tile.y, null)
@@ -327,7 +333,9 @@ exports.addPiece = function(id, placement, piece, cb){
     
     for(var i in placement){
         var piece = placement[i];
-        game.board[piece.x][piece.y] = game.turn;
+        var column = game.board[piece.x]
+        column[piece.y] = game.turn;
+        // game.board[piece.x][piece.y] = game.turn;
 
     }
 
