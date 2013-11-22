@@ -67,6 +67,22 @@ window.onload = function () {
 	    {'x':610, 'y':230, 'size':5}
 	    ];
 
+function getMaxDimension(piece){
+	var maxSize = 0;
+
+	for ( var i = 0; i < piece.length; i++ ) {
+		var point = piece[i];
+		if ( point.x > maxSize ) {
+			maxSize = point.x;
+		}
+		if ( point.y > maxSize ) {
+			maxSize = point.y;
+		}
+	}
+	
+	return maxSize + 1;
+}
+
 function choosePiece(event) {
 	var pieceChoices = document.getElementById('pieceChoices');
 	var pieceContext = pieceChoices.getContext('2d');
@@ -120,7 +136,7 @@ function getLocation(event) {
 
 
 		// check if move is legal
-		socket.emit('addPiece', { piece: 1, placement: [ {x: 0, y: 19} ] }, 
+		socket.emit('addPiece', { piece: 1, placement: [ {x: 0, y: 0} ] }, 
 			function(error) {
 				if (error) {
 					alert('you fucked up');
@@ -150,7 +166,8 @@ function drawPieceList(){
 
 	if(chosenPieceId) {
 		var canvasLocation = pieceCanvasLocation[chosenPieceId];
-		pieceContext.strokeRect(canvasLocation.x, canvasLocation.y, canvasLocation.size * 20, canvasLocation.size * 20);
+		var thisPiece = available[chosenPieceId];
+		pieceContext.strokeRect(canvasLocation.x - 5, canvasLocation.y - 5, getMaxDimension(thisPiece) * 20 + 10, getMaxDimension(thisPiece) * 20 + 10);
 	}
 
 	for ( var i = 0; i < available.length; i++ ) {
