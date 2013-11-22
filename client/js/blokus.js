@@ -69,6 +69,7 @@ window.onload = function () {
 
 function choosePiece(event) {
 	var pieceChoices = document.getElementById('pieceChoices');
+	var pieceContext = pieceChoices.getContext('2d');
 	
 	event = event || window.event;
 
@@ -82,6 +83,7 @@ function choosePiece(event) {
 			&& x <= canvasLocation.x + canvasLocation.size * 20
 			&& y <= canvasLocation.y + canvasLocation.size * 20 ) {
 				chosenPieceId = i;
+				drawPieceList();
 				break;
 			}
 	}
@@ -144,7 +146,13 @@ function getLocation(event) {
 function drawPieceList(){
 	var pieceChoices = document.getElementById('pieceChoices');
 	var pieceContext = pieceChoices.getContext('2d');
-	pieceContext.clearRect(0, 0, pieceChoices.width, pieceChoices.height)
+	pieceContext.clearRect(0, 0, pieceChoices.width, pieceChoices.height);
+
+	if(chosenPieceId) {
+		var canvasLocation = pieceCanvasLocation[chosenPieceId];
+		pieceContext.strokeRect(canvasLocation.x, canvasLocation.y, canvasLocation.size * 20, canvasLocation.size * 20);
+	}
+
 	for ( var i = 0; i < available.length; i++ ) {
 		var piece = available[i];
 		pieceContext.fillStyle = colors[2];
