@@ -31,6 +31,14 @@ module.exports.listen = function(app){
       // User leaves
       socket.on('disconnect', function(){
         console.log("Disconnect: ", socket.id)
+        socket.get('uuid', function(err, uuid){
+          game.leave(uuid, function(err, res){
+            if (err) { socket.emit("alert", err) }
+            else{ 
+              socket.broadcast.emit("game", res )
+            }
+          });
+        })
       })
       
       socket.on('name', function(data){

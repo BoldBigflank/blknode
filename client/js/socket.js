@@ -12,14 +12,23 @@ console.log(data);
 
 socket.emit('join', function(playerObj){
 	console.log("emitted join", playerObj);
-	$(".username").text(playerObj.name);
+	var spectating = (playerObj.state == 'spectating') ? " (Spectating)" : "";
+	$(".username").text(playerObj.name + spectating);
 });
 
 socket.on('game', function(gameObj){
 	game = gameObj;
+	if(game.state == "prep")
+		$(".status").text("Waiting for more players to join").removeClass("hidden");
+	else if(game.state == "ended")
+		$(".status").text("Game Over!").removeClass("hidden");
+	else{
+		$(".status").text("It is currently Player " + (game.turn + 1) + "'s turn").removeClass("hidden");
+	}
 })
 
 socket.on('alert', function(message) {
+	$(".error").text(message).removeClass("hidden");
 	console.log(message);
 });
 

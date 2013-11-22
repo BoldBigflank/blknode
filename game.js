@@ -125,8 +125,9 @@ exports.join = function(uuid, cb){
             id: uuid
             , name: names.shift() || uuid
             , pieces: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] 
-            , status: 'active'
+            , state: 'active'
         }
+        if(game.players.length >= maxPlayers) player.state = 'spectating';
 
         game.players.push(player)
         if(game.players.length == 4){
@@ -137,11 +138,18 @@ exports.join = function(uuid, cb){
     cb(null, {players: game.players, turn: game.turn, state:game.state})
 }
 
-exports.leave = function(id){
+exports.leave = function(uuid, cb){
     // Remove their player
-    var player = _.find(game.players, function(player){ return player.id == id })
-    game.players = _.without(game.players, player)
-
+    var player = _.find(game.players, function(player){ return player.id == uuid })
+    if(player){
+        player.state = "disconnect";
+        // If only one active player left, end the game
+        if(_.where(game.players, {state:'active'}).length == 1){
+            game.state = "ended";
+        };
+        cb(null, {players: game.players, state: game.state})
+    }
+    // game.players = _.without(game.players, player)
 }
 
 exports.getAnswers = function(){ return answers }
@@ -284,6 +292,11 @@ exports.addPiece = function(id, placement, piece, cb){
     //     return (_.difference(piece, testPiece).length == 0)
     // }) 
 
+    do{
+
+        game.turn = game.turn+1 % maxPlayers;
+    } while( game.players[game.turn].state != "active" )
+
     game.turn = game.turn+1 % maxPlayers;
     cb(null, {board: game.board, players: game.players});
 }
@@ -305,7 +318,7 @@ exports.addPiece = function(id, placement, piece, cb){
 //         var player = {
 //             id: id
 //             , name: names.shift() || id
-//             , status: 'active'
+//             , state: 'active'
 //         }
 //         game.players.push(player)
 //     }
@@ -340,7 +353,7 @@ exports.addPiece = function(id, placement, piece, cb){
 //     //                 , name: names.shift() || uuid
 //     //                 , answers: []
 //     //                 , score: 0
-//     //                 , status: 'active'
+//     //                 , state: 'active'
 //     //             }
 //     //             game.players.push(player)
 //     //         }
