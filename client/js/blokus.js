@@ -85,8 +85,8 @@ function getLocation(event) {
 	if ( chosenPiece ) {
 
 		// check if move is legal
-		socket.emit('addPiece', 
-			{piece: 1, placement: [{x: 0, y: 0}], function(error) {
+		socket.emit('addPiece', { piece: 1, placement: [ {x: 0, y: 0} ] }, 
+			function(error) {
 				if (error) {
 					alert('you fucked up');
 				}
@@ -100,9 +100,8 @@ function getLocation(event) {
 			
 					}					
 				}
-			});
-
-		}
+			}
+		);
     }
 }
 
