@@ -38,21 +38,24 @@ window.onload = function () {
 	    ];
 
 function choosePiece(event) {
-	var boardElem = document.getElementById('boardCanvas');
 	var pieceChoices = document.getElementById('pieceChoices');
-	var pieceContext = pieceChoices.getContext('2d');
-	var context = boardElem.getContext('2d');
 	
 	event = event || window.event;
 
-	var x = Math.floor( ( event.pageX - pieceChoices.offsetLeft ) / 20 );
-	var y = Math.floor( ( event.pageY - pieceChoices.offsetTop ) / 20 );
+	var x = Math.floor( event.pageX - pieceChoices.offsetLeft );
+	var y = Math.floor( event.pageY - pieceChoices.offsetTop );
 
-	if (x < 10) {
-		chosenPiece = piece1;
-	}else if ( x >= 10) {		
-		chosenPiece = piece2;
+	for ( var i = 0; i < pieceCanvasLocation.length; i++ ) {
+		var canvasLocation = pieceCanvasLocation[i];
+		if ( x >= canvasLocation.x
+			&& y >= canvasLocation.y 
+			&& x <= canvasLocation.x + canvasLocation.size * 20
+			&& y <= canvasLocation.y + canvasLocation.size * 20 ) {
+				chosenPiece = available[i];
+				break;
+			}
 	}
+
 }
 				
 function drawGrid() {
@@ -112,7 +115,6 @@ function drawPieceList(){
 	var context = boardElem.getContext('2d');
 	for ( var i = 0; i < available.length; i++ ) {
 		var piece = available[i];
-		console.log(piece.length);
 		pieceContext.fillStyle = colors[2];
 		for ( var j = 0; j < piece.length; j++ ) {
 			var point = piece[j];
