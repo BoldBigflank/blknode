@@ -247,18 +247,13 @@ function findFacingTile(tile){
     console.log("(" + x + "," + y + ")" + (x+y) );
 
     // Above
-    console.log("above")
     if(y < boardHeight-1 && game.board[x][y+1] === game.turn ) return true;
     // Below
-    console.log("below")
     if(y > 0 && game.board[x][y-1] === game.turn ) return true;
     // Right
-    console.log("left")
     if(x < boardWidth-1 && game.board[x+1][y] === game.turn ) return true;
     // Right
-    console.log("right")
     if(x > 0 && game.board[x-1][y] === game.turn ) return true;
-    console.log("done")
     return false;
 }
 
@@ -272,10 +267,10 @@ function findDiagonalConnector(tile){
     if( game.turn == 2 && x == boardWidth-1  && y == 0 )              return true;
     if( game.turn == 3 && x == 0             && y == 0 )              return true;
 
-    // Above left
-    if( x > 0 && y < boardHeight-1 && game.board[x+1][y-1] === game.turn ) return true;
     // Above right
     if( x < boardWidth-1 && y < boardHeight-1 && game.board[x+1][y+1] === game.turn ) return true;
+    // Above left
+    if( x > 0 && y < boardHeight-1 && game.board[x-1][y+1] === game.turn ) return true;
     // Below left
     if( x > 0  && y > 0 && game.board[x-1][y-1] === game.turn ) return true;
     // Below right
@@ -305,7 +300,7 @@ exports.addPiece = function(id, placement, piece, cb){
             return;
         }
         // Check for impossible values
-        if( x<0 || y < 0 || x >= boardWidth || y >= boardHeight  ){
+        if( tile.x<0 || tile.y < 0 || tile.x >= boardWidth || tile.y >= boardHeight  ){
             cb("Tile is not on the game board", null)
             return;
         }
