@@ -1,0 +1,36 @@
+<html>
+<head>
+
+</head>
+<body>
+<canvas id="myCanvas" width="400" height="400">
+Fallback content, in case the browser does not support Canvas.
+</canvas>
+<script>
+var elem = document.getElementById('myCanvas');
+
+if (elem && elem.getContext) {
+  var context = elem.getContext('2d');
+  if (context) {
+    for ( var i = 0; i < 20; i++ ) {
+	  for ( var j = 0; j < 20; j++ ) {
+	    context.strokeRect(i*20, j*20, 20, 20);
+	  }
+	}
+	
+	var drawX = 6;
+	var drawY = 9;
+	var piece = [{x:0,y:0},{x:0,y:1}];
+	
+	for ( var i = 0; i < piece.length; i++ ) {
+		var point = piece[i];
+		var xLoc = drawX + point.x;
+		var yLoc = drawY + point.y;
+	    context.fillRect(xLoc*20, yLoc*20, 20, 20);
+		
+	} 
+  }
+}
+</script>
+</body>
+</html>
