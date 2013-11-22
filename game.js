@@ -276,13 +276,18 @@ exports.addPiece = function(id, placement, piece, cb){
     var hasDiagonalConnector = false;
 
     for( var i in placement){
-        if ( findFacingTile( placement[i] ) == true) {
-            cb("This placement has a facing tile at " + placement[i], null)
+        tile = placement[i]
+        if ( findFacingTile( tile ) == true) {
+            cb("This placement has a facing tile at " + tile, null)
             return;
         };
-        hasDiagonalConnector = hasDiagonalConnector || findDiagonalConnector(placement[i]);
+        hasDiagonalConnector = hasDiagonalConnector || findDiagonalConnector(tile);
 
         // Make sure each position is open
+        if(game.board[tile.x][tile.y] != 0){
+            cb("This piece is overlapping at " + tile, null)
+            return;
+        }
 
     }
     if ( !hasDiagonalConnector ){
