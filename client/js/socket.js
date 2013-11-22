@@ -16,6 +16,5 @@ socket.emit('join', function(playerObj){
 
 socket.on('alert', function(message) {
 	console.log(message);
-	alert(message);
 });
 
