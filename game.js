@@ -281,6 +281,9 @@ exports.addPiece = function(id, placement, piece, cb){
             return;
         };
         hasDiagonalConnector = hasDiagonalConnector || findDiagonalConnector(placement[i]);
+
+        // Make sure each position is open
+
     }
     if ( !hasDiagonalConnector ){
         cb("This placement has no connecting tile diagonal from it", null);
