@@ -300,9 +300,15 @@ exports.addPiece = function(id, placement, piece, cb){
     
     // Verify the suggested tile on the board
     var hasDiagonalConnector = false;
-
+    console.log("placement", placement)
     for( var i in placement){
-        tile = placement[i]
+        var tile = placement[i]
+        console.log(tile)
+        if(typeof tile.x == "undefined" || typeof tile.y== "undefined"){
+            cb("Tile does not have a valid x and y coordinate", null)
+            return;
+        }
+
         if ( findFacingTile( tile ) == true) {
             cb("This placement has a facing tile at " + tile.x + tile.y, null)
             return;
