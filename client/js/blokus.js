@@ -144,7 +144,7 @@ function getLocation(event) {
 	var y = Math.floor( 19 - ( event.pageY - boardElem.offsetTop ) / 20 );
 
 
-	var thisPiece = available[chosenPieceId];
+	var thisPiece = available[chosenPieceId].slice(0);;
 	if( thisPiece ) {
 		for ( var i = 0; i < thisPiece.length; i++ ) {
 			thisPiece[i].x = thisPiece[i].x + x;
@@ -153,10 +153,14 @@ function getLocation(event) {
 		
 
 		// check if move is legal
+		console.log(chosenPieceId);
+		console.log(thisPiece);
+		console.log({ piece: chosenPieceId, placement: thisPiece });
 		socket.emit('addPiece', { piece: chosenPieceId, placement: thisPiece }, 
 			function(error) {
 				if (error) {
-					alert('you fucked up');
+				console.log(error);
+				alert(error);
 				}
 				else {
 					//context.fillStyle = chosenPiece[0].color; - use this player color, not piece color
