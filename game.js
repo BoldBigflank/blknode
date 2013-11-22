@@ -24,6 +24,7 @@ var init = function(cb){
     game = {
         board:newBoard(),
         players:[],
+        playerOrder:[0,1,2,3],
         turn:null,
         state:"prep"
     }
@@ -126,13 +127,21 @@ exports.join = function(uuid, cb){
             , name: names.shift() || uuid
             , pieces: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] 
             , state: 'active'
+            , position:-1
         }
         if(_.where(game.players, {state:'active'}).length >= maxPlayers) player.state = 'spectating';
 
         game.players.push(player)
         if(_.where(game.players, {state:'active'}).length == maxPlayers){
-            game.turn = 0,
             game.state = 'active'
+            // Add the players to playerOrder
+            game.playerOrder = []
+            var playerNumber = 0;
+            for( var i in game.players){
+                var player = game.players[i]
+                if(player.state == 'active') player.position = playerNumber++;
+            }
+            game.turn = 0
         }
     }
     cb(null, {players: game.players, turn: game.turn, state:game.state})
@@ -148,7 +157,7 @@ exports.leave = function(uuid, cb){
             game.state = "ended";
         }
         else { // Make sure it is an active person's turn
-            while(game.players[game.turn].state != 'active'){
+            while(_.findWhere(game.players, {position:game.turn}).state != 'active'){
                 game.turn = (game.turn+1) % game.players.length;
             }
         }
@@ -256,9 +265,9 @@ function findDiagonalConnector(tile){
 
     // Starting positions
     if( game.turn == 0 && x == 0             && y == boardHeight-1 )  return true;
-    if( game.turn == 1 && x == boardWidth-1   && y == boardHeight-1 )  return true;
-    if( game.turn == 2 && x == boardWidth-1   && y == 0 )             return true;
-    if( game.turn == 3 && x == 0             && y == 0 )             return true;
+    if( game.turn == 1 && x == boardWidth-1  && y == boardHeight-1 )  return true;
+    if( game.turn == 2 && x == boardWidth-1  && y == 0 )              return true;
+    if( game.turn == 3 && x == 0             && y == 0 )              return true;
 
     // Above left
     if( x > 0 && y < boardHeight-1 && game.board[x+1][y-1] === game.turn ) return true;
@@ -273,16 +282,17 @@ function findDiagonalConnector(tile){
 
 exports.addPiece = function(id, placement, piece, cb){
     // cb(err, res)
+    var player = _.findWhere(game.players, {position:game.turn})
+
     if(game.state != "active"){
         cb ("The game has not yet started. Get more friends.", null)
         return;
     } 
-    else if( game.players[game.turn].id !== id ){
+    else if( player.id !== id ){
         cb ("It is not your turn", null)
         return;
     }
-    var player = game.players[game.turn]
-
+    
     // Verify the suggested tile on the board
     var hasDiagonalConnector = false;
 
@@ -318,12 +328,10 @@ exports.addPiece = function(id, placement, piece, cb){
     // }) 
 
     do{
+        game.turn = (game.turn+1) % maxPlayers;
+    } while( _.findWhere(game.players, {position:game.turn}).state != "active" )
 
-        game.turn = (game.turn+1) % game.players.length;
-    } while( game.players[game.turn].state != "active" )
-
-    game.turn = (game.turn+1) % game.players.length;
-    cb(null, {board: game.board, players: game.players});
+    cb(null, {board: game.board, players: game.players, turn: game.turn});
 }
 
 // exports.addAnswer = function(id, guess, cb){
