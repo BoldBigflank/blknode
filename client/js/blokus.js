@@ -141,14 +141,14 @@ function getLocation(event) {
 	event = event || window.event;
 
 	var x = Math.floor( ( event.pageX - boardElem.offsetLeft ) / 20 );
-	var y = Math.floor( ( event.pageY - boardElem.offsetTop ) / 20 );
+	var y = Math.floor( 19 - ( event.pageY - boardElem.offsetTop ) / 20 );
 
 
 	var thisPiece = available[chosenPieceId];
 	if( thisPiece ) {
 		for ( var i = 0; i < thisPiece.length; i++ ) {
 			thisPiece[i].x = thisPiece[i].x + x;
-			thisPiece[i].y = thisPiece[i].y + y;
+			thisPiece[i].y = y - thisPiece[i].y;
 		}
 		
 
@@ -198,7 +198,7 @@ function drawPieceList(){
 			var y = canvasLocation.y;
 			
 			var xLoc = x + ( point.x * 20 );
-			var yLoc = y + ( point.y * 20 );
+			var yLoc = y + ( ( getMaxDimension(piece) - 1 - point.y ) * 20 );
 			pieceContext.fillRect(xLoc, yLoc, 20, 20);			
 		}
 	}
