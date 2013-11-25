@@ -299,17 +299,11 @@ function drawPiece(index) {
 		    	if ( minX > 0 ) {
 			    	for ( var i = 0; i < pieceToChange.length; i++ ) {
 				    	var point = pieceToChange[i];
-				    	replacementPiece.push( {'x':pieceToChange.length - point.y, 'y':point.x } );
-				    	minX = Math.min( minX, pieceToChange.length - point.y );
+			    		replacementPiece[i].x = replacementPiece[i].x - minX;
 			    	}
-			    	if ( minX > 0 ) {
-				    	for ( var i = 0; i < pieceToChange.length; i++ ) {
-				    		replacementPiece[i].x = replacementPiece[i].x - minX;
-				    	}
-			    	}
-			    	available[chosenPieceId] = replacementPiece;
-			    	drawPieceList();
 			    }
+		    	available[chosenPieceId] = replacementPiece;
+		    	drawPieceList();
 		    }
 	    };
 
