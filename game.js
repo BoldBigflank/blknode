@@ -262,10 +262,10 @@ function findDiagonalConnector(tile){
     var y = tile.y;
 
     // Starting positions
-    if( game.turn == 0 && x == 0             && y == boardHeight-1 )  return true;
-    if( game.turn == 1 && x == boardWidth-1  && y == boardHeight-1 )  return true;
-    if( game.turn == 2 && x == boardWidth-1  && y == 0 )              return true;
-    if( game.turn == 3 && x == 0             && y == 0 )              return true;
+    if( game.turn == 0 && x == 0             && y == 0 )  return true;
+    if( game.turn == 1 && x == boardWidth-1  && y == 0)  return true;
+    if( game.turn == 2 && x == boardWidth-1  && y == boardHeight-1  )              return true;
+    if( game.turn == 3 && x == 0             && y == boardHeight-1  )              return true;
 
     // Above right
     if( x < boardWidth-1 && y < boardHeight-1 && game.board[x+1][y+1] === game.turn ) return true;

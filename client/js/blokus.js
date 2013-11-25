@@ -123,10 +123,10 @@ function drawGrid() {
 	
 	for ( var i = 0; i < 20; i++ ) {
 		for ( var j = 0; j < 20; j++ ) {
-			boardContext.strokeRect(i*20, (19-j)*20, 20, 20);
+			boardContext.strokeRect(i*20, j*20, 20, 20);
 			if ( completeBoard && completeBoard[i][j] != null ) {
 				boardContext.fillStyle = colors[completeBoard[i][j]];
-				boardContext.fillRect(i*20, (19-j)*20, 20, 20);
+				boardContext.fillRect(i*20, j*20, 20, 20);
 			}
 		}
 	}	
@@ -141,14 +141,14 @@ function getLocation(event) {
 	event = event || window.event;
 
 	var x = Math.floor( ( event.pageX - boardElem.offsetLeft ) / 20 );
-	var y = Math.floor( 20 - ( event.pageY - boardElem.offsetTop ) / 20 );
+	var y = Math.floor( ( event.pageY - boardElem.offsetTop ) / 20 );
 
 
 	var thisPiece = [];
 	
 	if( chosenPieceId ) {
 		for ( var i = 0; i < available[chosenPieceId].length; i++ ) {
-			thisPiece.push({'x': available[chosenPieceId][i].x + x , 'y': y - available[chosenPieceId][i].y })
+			thisPiece.push({'x': available[chosenPieceId][i].x + x , 'y': y + available[chosenPieceId][i].y })
 		}
 		
 
@@ -202,7 +202,7 @@ function drawPieceList(){
 				var y = canvasLocation.y;
 				
 				var xLoc = x + ( point.x * 20 );
-				var yLoc = y + ( ( getMaxDimension(piece) - 1 - point.y ) * 20 );	
+				var yLoc = y + ( point.y * 20 );	
 				pieceContext.drawImage(img, xLoc, yLoc);
 			}
 		}
