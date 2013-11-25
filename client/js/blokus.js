@@ -133,13 +133,14 @@ function drawGrid() {
 			/* not sure why this drawImage isn't working - looks like it should */
 				var img = new Image();
 				img.src = "/img/" + colors[completeBoard[i][j]] +".png";
-				boardContext.drawImage(img, i*20, j*20, 20, 20);
+				boardContext.drawImage(img, i*20, j*20);
 			}
 		}
 	}	
 }
 
 function getLocation(event) {
+	if( typeof chosenPieceId == "undefined" || chosenPieceId == null ) return;
 	var boardElem = document.getElementById('boardCanvas');
 	var pieceChoices = document.getElementById('pieceChoices');
 	var pieceContext = pieceChoices.getContext('2d');
@@ -153,27 +154,25 @@ function getLocation(event) {
 
 	var thisPiece = [];
 	
-	if( chosenPieceId ) {
-		for ( var i = 0; i < available[chosenPieceId].length; i++ ) {
-			thisPiece.push({'x': available[chosenPieceId][i].x + x , 'y': y + available[chosenPieceId][i].y })
-		}
-		
-
-		// check if move is legal
-		console.log({ piece: chosenPieceId, placement: thisPiece });
-		socket.emit('addPiece', { piece: chosenPieceId, placement: thisPiece }, 
-			function(error) {
-				if (error) {
-					console.log(error);
-				}
-				else {
-					// Remove the selection box
-					chosenPieceId = null;
-					drawPieceList();
-				}
-			}
-		);
+	for ( var i = 0; i < available[chosenPieceId].length; i++ ) {
+		thisPiece.push({'x': available[chosenPieceId][i].x + x , 'y': y + available[chosenPieceId][i].y })
 	}
+	
+	// check if move is legal
+	console.log({ piece: chosenPieceId, placement: thisPiece });
+	socket.emit('addPiece', 
+		{ piece: chosenPieceId, placement: thisPiece }, 
+		function(error) {
+			if (error) {
+				console.log(error);
+			}
+			else {
+				// Remove the selection box
+				chosenPieceId = null;
+				drawPieceList();
+			}
+		}
+	);
 }
 
 
@@ -247,6 +246,7 @@ function drawAllPieces() {
 */
 
 	    function rotate() {
+	    	if( typeof chosenPieceId == "undefined" || chosenPieceId == null ) return;
 	    	var pieceToChange = available[chosenPieceId];
 	    	var replacementPiece = [];
 	    	var minX = pieceToChange.length;
@@ -266,6 +266,7 @@ function drawAllPieces() {
 	    };
 
 	    function flip() {
+	    	if( typeof chosenPieceId == "undefined" || chosenPieceId == null ) return;
 	    	var pieceToChange = available[chosenPieceId];
 	    	var replacementPiece = [];
 	    	for ( var i = 0; i < pieceToChange.length; i++ ) {
