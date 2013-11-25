@@ -290,6 +290,12 @@ exports.addPiece = function(id, placement, piece, cb){
         cb ("It is not your turn", null)
         return;
     }
+
+    // Make sure the player owns that piece
+    if(player.pieces.indexOf(piece) == -1){
+        cb("Player has already used that piece", null)
+        return;
+    }
     
     // Verify the suggested tile on the board
     var hasDiagonalConnector = false;
@@ -327,9 +333,9 @@ exports.addPiece = function(id, placement, piece, cb){
     // Add the piece to the board
     
     for(var i in placement){
-        var piece = placement[i];
-        var column = game.board[piece.x]
-        column[piece.y] = game.turn;
+        var position = placement[i];
+        var column = game.board[position.x]
+        column[position.y] = game.turn;
         // game.board[piece.x][piece.y] = game.turn;
 
     }
