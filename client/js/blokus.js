@@ -161,8 +161,7 @@ function drawOutline(event) {
 
 				if ( pieceX >= 0 && pieceY >= 0 && pieceX < 20 && pieceY < 20 ) {
 					if ( completeBoard && completeBoard[pieceX][pieceY] != null ) {
-						boardContext.fillStyle = colors[completeBoard[pieceX][pieceY]];
-						boardContext.fillRect(pieceX*20, pieceY*20, 20, 20);
+						boardContext.drawImage(images[completeBoard[pieceX][pieceY]], pieceX*20, pieceY*20);
 					} else {
 						boardContext.fillStyle = 'white';
 						boardContext.fillRect(pieceX*20, pieceY*20, 20, 20);
