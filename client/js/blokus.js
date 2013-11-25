@@ -9,14 +9,14 @@ window.onload = function () {
 	var context = boardElem.getContext('2d');
 
 	drawGrid();
-	drawPieceList();
+
 	
    boardElem.onclick = getLocation;
    pieceChoices.onclick = choosePiece;
 }
 
 
-	    var colors = ['green', 'blue', 'orange', 'yellow'];
+	    var colors = ['green', 'blue', 'purple', 'red'];
 
 	    var available = [
 			[{'x':0, 'y':0}],
@@ -116,9 +116,9 @@ function drawGrid() {
 	boardContext.fillStyle = colors[1];
 	boardContext.fillRect(395, -5, 10, 10);
 	boardContext.fillStyle = colors[2];
-	boardContext.fillRect(-5,395, 10, 10);
-	boardContext.fillStyle = colors[3];
 	boardContext.fillRect(395, 395, 10, 10);
+	boardContext.fillStyle = colors[3];
+	boardContext.fillRect(-5,395, 10, 10);
 	console.log(completeBoard);
 	
 	for ( var i = 0; i < 20; i++ ) {
@@ -188,13 +188,11 @@ function drawPieceList(){
 		var thisPiece = available[chosenPieceId];
 		pieceContext.strokeRect(canvasLocation.x - 5, canvasLocation.y - 5, getMaxDimension(thisPiece) * 20 + 10, getMaxDimension(thisPiece) * 20 + 10);
 	}
-
+	
 	for ( var i = 0; i < available.length; i++ ) {
 		var piece = available[i];
-		pieceContext.fillStyle = colors[2];
-		if ( playerPosition && playerPosition != -1 ) {
-			pieceContext.fillStyle = colors[playerPosition];
-		}
+		pieceContext.fillStyle = colors[playerId-1];	
+
 		for ( var j = 0; j < piece.length; j++ ) {
 			var point = piece[j];
 			var canvasLocation = pieceCanvasLocation[i];

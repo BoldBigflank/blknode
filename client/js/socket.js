@@ -19,6 +19,8 @@ socket.emit('join', function(playerObj){
 	playerPosition = playerObj.position;
 	var spectating = (playerObj.state == 'spectating') ? " (Spectating)" : "";
 	$(".username").text(playerObj.name + spectating);
+
+	drawPieceList();
 });
 
 socket.on('game', function(gameObj){
