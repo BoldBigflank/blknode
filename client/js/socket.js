@@ -4,6 +4,8 @@ var player = {};
 
 socket.on('game', function(gameObj){
 	game = _.extend(game, gameObj);
+	if(gameObj.players) game.players = gameObj.players;
+
 	if ( game.board ) {
 		completeBoard = game.board;
 		drawGrid();
@@ -24,7 +26,8 @@ socket.on('game', function(gameObj){
 				player = thisPlayer;
 				drawPieceList();
 			}
-			$("ul.scoreboard").append("<li class='list-group-item'>" + thisPlayer.name + ": " + thisPlayer.score + "</li>");
+			if(thisPlayer.state != "spectating")
+				$("ul.scoreboard").append("<li class='list-group-item'>" + thisPlayer.name + ": " + thisPlayer.score + "</li>");
 		}
 		
 	}

@@ -153,7 +153,7 @@ exports.leave = function(uuid, cb){
     // Remove their player
     var player = _.find(game.players, function(player){ return player.id == uuid })
     if(player){
-        player.state = "disconnect";
+        if(player.state != "spectating") player.state = "disconnect";
         // If only one active player left, end the game
         if(_.where(game.players, {state:'active'}).length <= 1){
             game.state = "ended";
