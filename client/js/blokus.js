@@ -98,7 +98,9 @@ function choosePiece(event) {
 			&& y >= canvasLocation.y 
 			&& x <= canvasLocation.x + canvasLocation.size * 20
 			&& y <= canvasLocation.y + canvasLocation.size * 20 ) {
-				chosenPieceId = i;
+				if(player.pieces.indexOf(i) != -1)
+					chosenPieceId = i;
+				console.log("chosenPieceId", chosenPieceId);
 				drawPieceList();
 				break;
 			}
@@ -162,10 +164,12 @@ function getLocation(event) {
 		socket.emit('addPiece', { piece: chosenPieceId, placement: thisPiece }, 
 			function(error) {
 				if (error) {
-				console.log(error);
+					console.log(error);
 				}
 				else {
-					// let the server tell me what board to draw
+					// Remove the selection box
+					chosenPieceId = null;
+					drawPieceList();
 				}
 			}
 		);
@@ -188,9 +192,11 @@ function drawPieceList(){
 	}
 	
 	var img = new Image();
-	img.src = "img/" + colors[playerId-1] +".png";
+	var positionColor = (player.position>=0) ? player.position : 0;
+	img.src = "img/" + colors[positionColor] +".png";
 	img.onload = function(){
 		for ( var i = 0; i < available.length; i++ ) {
+			// var pieceIndex = player.pieces[i];
 			var piece = available[i];
 
 			for ( var j = 0; j < piece.length; j++ ) {
@@ -201,43 +207,44 @@ function drawPieceList(){
 				
 				var xLoc = x + ( point.x * 20 );
 				var yLoc = y + ( point.y * 20 );	
-				pieceContext.drawImage(img, xLoc, yLoc);
+				if(player.pieces.indexOf(i) != -1)
+					pieceContext.drawImage(img, xLoc, yLoc);
 			}
 		}
 	}
 }
 
 
-	    function drawPiece(index) {
-	    	var maxSize = available[index].length;
+function drawPiece(index) {
+	var maxSize = available[index].length;
 
-			for ( var i = 0; i < maxSize; i++ ) {
-				for ( var j = 0; j < maxSize; j++ ) {
-					$( "#link-" + index ).append( "<div id='piece-" + index + "-" + j + "-" + i + "' style='display: inline-block;width:20px;height:20px;' />" );
-				}
+	for ( var i = 0; i < maxSize; i++ ) {
+		for ( var j = 0; j < maxSize; j++ ) {
+			$( "#link-" + index ).append( "<div id='piece-" + index + "-" + j + "-" + i + "' style='display: inline-block;width:20px;height:20px;' />" );
+		}
 
-					$( "#link-" + index ).append( "<br/>");
-			}
-					$( "#link-" + index ).append( '<a href="#" onclick="javascript:flip(' + index + ');">Flip</a><a href="#" onclick="javascript:rotate(' + index + ');">Rotate</a>');
-					$( "#link-" + index ).append( "<br/>");
-			
-			for( var i = 0; i < available[index].length; i++ ) {
-				var thisBlock = available[index][i];
-				var element = document.getElementById('piece-' + index + '-' + thisBlock.x + '-' + thisBlock.y);
-				element.style.backgroundColor = colors[1];
-			}
-		    
-	    };
+			$( "#link-" + index ).append( "<br/>");
+	}
+			$( "#link-" + index ).append( '<a href="#" onclick="javascript:flip(' + index + ');">Flip</a><a href="#" onclick="javascript:rotate(' + index + ');">Rotate</a>');
+			$( "#link-" + index ).append( "<br/>");
+	
+	for( var i = 0; i < available[index].length; i++ ) {
+		var thisBlock = available[index][i];
+		var element = document.getElementById('piece-' + index + '-' + thisBlock.x + '-' + thisBlock.y);
+		element.style.backgroundColor = colors[1];
+	}
+    
+};
 
 /*
-	    function drawAllPieces() {
-		    $( "#pieceChoice" ).empty();
-			for( var i = 0; i < available.length; i++ ) {
-				$( "#pieceChoice" ).append( "<a id='link-" + i + "' href='#' onclick='javascript:choosePiece(" + i + ")'/>" );
-				drawPiece(i);
-			}
-	    };
-	    */
+function drawAllPieces() {
+    $( "#pieceChoice" ).empty();
+	for( var i = 0; i < available.length; i++ ) {
+		$( "#pieceChoice" ).append( "<a id='link-" + i + "' href='#' onclick='javascript:choosePiece(" + i + ")'/>" );
+		drawPiece(i);
+	}
+};
+*/
 
 	    function rotate() {
 	    	var pieceToChange = available[chosenPieceId];

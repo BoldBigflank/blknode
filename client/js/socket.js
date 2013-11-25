@@ -1,9 +1,10 @@
 var socket = io.connect();
 console.log("socket is defined");
 var game = {};
+var player = {};
 
-var playerId;
-var playerPosition;
+// var playerId;
+// var playerPosition;
 
 console.log("preparing for sockets");
     
@@ -15,8 +16,9 @@ console.log(data);
 
 socket.emit('join', function(playerObj){
 	console.log("emitted join", playerObj);
-	playerId = playerObj.id;
-	playerPosition = playerObj.position;
+	player = playerObj
+	// playerId = playerObj.id;
+	// playerPosition = playerObj.position;
 	var spectating = (playerObj.state == 'spectating') ? " (Spectating)" : "";
 	$(".username").text(playerObj.name + spectating);
 
@@ -39,9 +41,10 @@ socket.on('game', function(gameObj){
 	if(game.state == "active") {
 		var players = game.players;
 		for ( var i = 0; i < players.length; i++ ) {
-			var player = players[i];
-			if ( player.id = playerId ) {
-				playerPosition = player.position;
+			var thisPlayer = players[i];
+			if ( thisPlayer.id == player.id ) {
+				player = thisPlayer;
+				drawPieceList();
 			}
 		}
 		
