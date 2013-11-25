@@ -189,19 +189,22 @@ function drawPieceList(){
 		pieceContext.strokeRect(canvasLocation.x - 5, canvasLocation.y - 5, getMaxDimension(thisPiece) * 20 + 10, getMaxDimension(thisPiece) * 20 + 10);
 	}
 	
-	for ( var i = 0; i < available.length; i++ ) {
-		var piece = available[i];
-		pieceContext.fillStyle = colors[playerId-1];	
+	var img = new Image();
+	img.src = "img/" + colors[playerId-1] +".png";
+	img.onload = function(){
+		for ( var i = 0; i < available.length; i++ ) {
+			var piece = available[i];
 
-		for ( var j = 0; j < piece.length; j++ ) {
-			var point = piece[j];
-			var canvasLocation = pieceCanvasLocation[i];
-			var x = canvasLocation.x;
-			var y = canvasLocation.y;
-			
-			var xLoc = x + ( point.x * 20 );
-			var yLoc = y + ( ( getMaxDimension(piece) - 1 - point.y ) * 20 );
-			pieceContext.fillRect(xLoc, yLoc, 20, 20);			
+			for ( var j = 0; j < piece.length; j++ ) {
+				var point = piece[j];
+				var canvasLocation = pieceCanvasLocation[i];
+				var x = canvasLocation.x;
+				var y = canvasLocation.y;
+				
+				var xLoc = x + ( point.x * 20 );
+				var yLoc = y + ( ( getMaxDimension(piece) - 1 - point.y ) * 20 );	
+				pieceContext.drawImage(img, xLoc, yLoc);
+			}
 		}
 	}
 }
