@@ -1,15 +1,16 @@
 var chosenPieceId;
 var chosenPiece;
 var completeBoard;
+var images = [];
 
 window.onload = function () {
 	var boardElem = document.getElementById('boardCanvas');
 	var pieceChoices = document.getElementById('pieceChoices');
 	var pieceContext = pieceChoices.getContext('2d');
 	var context = boardElem.getContext('2d');
-
+	
+	preLoad();
 	drawGrid();
-
 	
    boardElem.onclick = getLocation;
    pieceChoices.onclick = choosePiece;
@@ -66,6 +67,14 @@ window.onload = function () {
 	    {'x':370, 'y':230, 'size':5},
 	    {'x':490, 'y':210, 'size':5}
 	    ];
+
+		
+function preLoad() {
+	for (var i = 0; i < colors.length; ++i) {
+		images[i] = new Image();
+		images[i].src = "img/" + colors[i] + ".png";
+	}
+}
 
 function getMaxDimension(piece){
 	var maxSize = 0;
@@ -127,13 +136,7 @@ function drawGrid() {
 		for ( var j = 0; j < 20; j++ ) {
 			boardContext.strokeRect(i*20, j*20, 20, 20);
 			if ( completeBoard && completeBoard[i][j] != null ) {
-				boardContext.fillStyle = colors[completeBoard[i][j]];
-				boardContext.fillRect(i*20, j*20, 20, 20);
-
-			/* not sure why this drawImage isn't working - looks like it should */
-				var img = new Image();
-				img.src = "/img/" + colors[completeBoard[i][j]] +".png";
-				boardContext.drawImage(img, i*20, j*20);
+				boardContext.drawImage(images[completeBoard[i][j]], i*20, j*20);
 			}
 		}
 	}	
@@ -190,27 +193,24 @@ function drawPieceList(){
 		pieceContext.strokeRect(canvasLocation.x - 5, canvasLocation.y - 5, getMaxDimension(thisPiece) * 20 + 10, getMaxDimension(thisPiece) * 20 + 10);
 	}
 	
-	var img = new Image();
 	var positionColor = (player.position>=0) ? player.position : 0;
-	img.src = "img/" + colors[positionColor] +".png";
-	img.onload = function(){
-		for ( var i = 0; i < available.length; i++ ) {
-			// var pieceIndex = player.pieces[i];
-			var piece = available[i];
+	for ( var i = 0; i < available.length; i++ ) {
+		// var pieceIndex = player.pieces[i];
+		var piece = available[i];
 
-			for ( var j = 0; j < piece.length; j++ ) {
-				var point = piece[j];
-				var canvasLocation = pieceCanvasLocation[i];
-				var x = canvasLocation.x;
-				var y = canvasLocation.y;
-				
-				var xLoc = x + ( point.x * 20 );
-				var yLoc = y + ( point.y * 20 );	
-				if(player.pieces.indexOf(i) != -1)
-					pieceContext.drawImage(img, xLoc, yLoc);
-			}
+		for ( var j = 0; j < piece.length; j++ ) {
+			var point = piece[j];
+			var canvasLocation = pieceCanvasLocation[i];
+			var x = canvasLocation.x;
+			var y = canvasLocation.y;
+			
+			var xLoc = x + ( point.x * 20 );
+			var yLoc = y + ( point.y * 20 );	
+			if(player.pieces.indexOf(i) != -1)
+				pieceContext.drawImage( images[positionColor], xLoc, yLoc);
 		}
 	}
+	
 }
 
 
