@@ -1,4 +1,4 @@
-var chosenPieceId;
+var chosenPieceId = -1;
 var chosenPiece;
 var completeBoard;
 
@@ -13,6 +13,7 @@ window.onload = function () {
 	
    boardElem.onclick = getLocation;
    pieceChoices.onclick = choosePiece;
+   boardElem.onmousemove = drawOutline;
 }
 
 
@@ -119,7 +120,6 @@ function drawGrid() {
 	boardContext.fillRect(395, 395, 10, 10);
 	boardContext.fillStyle = colors[3];
 	boardContext.fillRect(-5,395, 10, 10);
-//	console.log(completeBoard);
 	
 	for ( var i = 0; i < 20; i++ ) {
 		for ( var j = 0; j < 20; j++ ) {
@@ -135,6 +135,51 @@ function drawGrid() {
 			}
 		}
 	}	
+
+}
+
+var outlineX = -1;
+var outlineY = -1;
+
+function drawOutline(event) {
+	var boardElem = document.getElementById('boardCanvas');
+	var boardContext = boardElem.getContext('2d');
+
+	if ( chosenPieceId != -1 ) {
+		var x = Math.floor( ( event.pageX - boardElem.offsetLeft ) / 20 );
+		var y = Math.floor( ( event.pageY - boardElem.offsetTop ) / 20 );
+		if ( x != outlineX || y != outlineY ) {
+			// draw the overlay back to original
+			for ( var i = 0; i < available[chosenPieceId].length; i++ ) {
+				var pieceX = available[chosenPieceId][i].x + outlineX;
+				var pieceY = outlineY + available[chosenPieceId][i].y;
+
+				if ( pieceX >= 0 && pieceY >= 0 && pieceX < 20 && pieceY < 20 ) {
+					if ( completeBoard && completeBoard[pieceX][pieceY] != null ) {
+						boardContext.fillStyle = colors[completeBoard[pieceX][pieceY]];
+						boardContext.fillRect(pieceX*20, pieceY*20, 20, 20);
+					} else {
+						boardContext.fillStyle = 'white';
+						boardContext.fillRect(pieceX*20, pieceY*20, 20, 20);
+					}
+					boardContext.strokeRect(pieceX*20, pieceY*20, 20, 20);
+				}
+			}
+
+			// draw an outline of the new version
+			for ( var i = 0; i < available[chosenPieceId].length; i++ ) {
+				var pieceX = available[chosenPieceId][i].x + x;
+				var pieceY = y + available[chosenPieceId][i].y;
+
+				boardContext.fillStyle = 'orange';
+				boardContext.fillRect(pieceX*20, pieceY*20, 20, 20);
+			}
+			// draw the old location with correct items
+			// draw the new outline
+			outlineX = x;
+			outlineY = y;
+		}
+	}
 }
 
 function getLocation(event) {
@@ -151,20 +196,20 @@ function getLocation(event) {
 
 	var thisPiece = [];
 	
-	if( chosenPieceId ) {
+	if( chosenPieceId != -1 ) {
 		for ( var i = 0; i < available[chosenPieceId].length; i++ ) {
 			thisPiece.push({'x': available[chosenPieceId][i].x + x , 'y': y + available[chosenPieceId][i].y })
 		}
 		
 
 		// check if move is legal
-		console.log({ piece: chosenPieceId, placement: thisPiece });
 		socket.emit('addPiece', { piece: chosenPieceId, placement: thisPiece }, 
 			function(error) {
 				if (error) {
 				console.log(error);
 				}
 				else {
+					chosenPieceId = -1;
 					// let the server tell me what board to draw
 				}
 			}
@@ -180,8 +225,8 @@ function drawPieceList(){
 	var pieceContext = pieceChoices.getContext('2d');
 	pieceContext.clearRect(0, 0, pieceChoices.width, pieceChoices.height);
 
-	var canvasLocation = pieceCanvasLocation[chosenPieceId];
-	if ( canvasLocation ) {
+	if ( chosenPieceId != -1 ) {
+		var canvasLocation = pieceCanvasLocation[chosenPieceId];
 			
 		var thisPiece = available[chosenPieceId];
 		pieceContext.strokeRect(canvasLocation.x - 5, canvasLocation.y - 5, getMaxDimension(thisPiece) * 20 + 10, getMaxDimension(thisPiece) * 20 + 10);
@@ -240,31 +285,35 @@ function drawPieceList(){
 	    */
 
 	    function rotate() {
-	    	var pieceToChange = available[chosenPieceId];
-	    	var replacementPiece = [];
-	    	var minX = pieceToChange.length;
-	    	var minY = pieceToChange.length;
-	    	for ( var i = 0; i < pieceToChange.length; i++ ) {
-		    	var point = pieceToChange[i];
-		    	replacementPiece.push( {'x':pieceToChange.length - point.y, 'y':point.x } );
-		    	minX = Math.min( minX, pieceToChange.length - point.y );
-	    	}
-	    	if ( minX > 0 ) {
+		    if ( chosenPieceId != -1 ) {
+		    	var pieceToChange = available[chosenPieceId];
+		    	var replacementPiece = [];
+		    	var minX = pieceToChange.length;
+		    	var minY = pieceToChange.length;
 		    	for ( var i = 0; i < pieceToChange.length; i++ ) {
-		    		replacementPiece[i].x = replacementPiece[i].x - minX;
+			    	var point = pieceToChange[i];
+			    	replacementPiece.push( {'x':pieceToChange.length - point.y, 'y':point.x } );
+			    	minX = Math.min( minX, pieceToChange.length - point.y );
 		    	}
-	    	}
-	    	available[chosenPieceId] = replacementPiece;
-	    	drawPieceList();
+		    	if ( minX > 0 ) {
+			    	for ( var i = 0; i < pieceToChange.length; i++ ) {
+			    		replacementPiece[i].x = replacementPiece[i].x - minX;
+			    	}
+		    	}
+		    	available[chosenPieceId] = replacementPiece;
+		    	drawPieceList();
+		    }
 	    };
 
 	    function flip() {
-	    	var pieceToChange = available[chosenPieceId];
-	    	var replacementPiece = [];
-	    	for ( var i = 0; i < pieceToChange.length; i++ ) {
-		    	var point = pieceToChange[i];
-		    	replacementPiece.push( {'x':point.y, 'y':point.x } );
+		    if ( chosenPieceId != -1 ) {
+		    	var pieceToChange = available[chosenPieceId];
+		    	var replacementPiece = [];
+		    	for ( var i = 0; i < pieceToChange.length; i++ ) {
+			    	var point = pieceToChange[i];
+			    	replacementPiece.push( {'x':point.y, 'y':point.x } );
+		    	}
+		    	available[chosenPieceId] = replacementPiece;
+		    	drawPieceList();
 	    	}
-	    	available[chosenPieceId] = replacementPiece;
-	    	drawPieceList();
 	    };
