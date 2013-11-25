@@ -127,6 +127,7 @@ exports.join = function(uuid, cb){
             , pieces: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] 
             , state: 'active'
             , position:-1
+            , score: 0
         }
         if(_.where(game.players, {state:'active'}).length >= maxPlayers) player.state = 'spectating';
 
@@ -152,7 +153,7 @@ exports.leave = function(uuid, cb){
     // Remove their player
     var player = _.find(game.players, function(player){ return player.id == uuid })
     if(player){
-        player.state = "disconnect";
+        if(player.state != "spectating") player.state = "disconnect";
         // If only one active player left, end the game
         if(_.where(game.players, {state:'active'}).length <= 1){
             game.state = "ended";
@@ -290,6 +291,12 @@ exports.addPiece = function(id, placement, piece, cb){
         cb ("It is not your turn", null)
         return;
     }
+
+    // Make sure the player owns that piece
+    if(player.pieces.indexOf(piece) == -1){
+        cb("Player has already used that piece", null)
+        return;
+    }
     
     // Verify the suggested tile on the board
     var hasDiagonalConnector = false;
@@ -327,15 +334,19 @@ exports.addPiece = function(id, placement, piece, cb){
     // Add the piece to the board
     
     for(var i in placement){
-        var piece = placement[i];
-        var column = game.board[piece.x]
-        column[piece.y] = game.turn;
+        var position = placement[i];
+        var column = game.board[position.x]
+        column[position.y] = game.turn;
         // game.board[piece.x][piece.y] = game.turn;
-
+        player.score++;
     }
 
     // Remove the piece from the user's bag
     player.pieces = _.without(player.pieces, piece)
+    if(player.pieces.length == 0){ // Used all pieces
+        player.score += 15; // Score bonus
+        if(placement.length == 1) player.score += 5; // If the last piece was a monomino
+    }
     // player.pieces = _.reject(player.pieces, function(testPiece){
     //     return (_.difference(piece, testPiece).length == 0)
     // }) 
