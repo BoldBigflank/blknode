@@ -119,7 +119,7 @@ function drawGrid() {
 	boardContext.fillRect(395, 395, 10, 10);
 	boardContext.fillStyle = colors[3];
 	boardContext.fillRect(-5,395, 10, 10);
-	console.log(completeBoard);
+//	console.log(completeBoard);
 	
 	for ( var i = 0; i < 20; i++ ) {
 		for ( var j = 0; j < 20; j++ ) {
@@ -127,6 +127,11 @@ function drawGrid() {
 			if ( completeBoard && completeBoard[i][j] != null ) {
 				boardContext.fillStyle = colors[completeBoard[i][j]];
 				boardContext.fillRect(i*20, j*20, 20, 20);
+
+			/* not sure why this drawImage isn't working - looks like it should */
+				var img = new Image();
+				img.src = "/img/" + colors[completeBoard[i][j]] +".png";
+				boardContext.drawImage(img, i*20, j*20, 20, 20);
 			}
 		}
 	}	
@@ -160,14 +165,7 @@ function getLocation(event) {
 				console.log(error);
 				}
 				else {
-					//context.fillStyle = chosenPiece[0].color; - use this player color, not piece color
-					for ( var i = 0; i < thisPiece.length; i++ ) {
-						var point = thisPiece[i];
-						var xLoc = x + point.x;
-						var yLoc = y + point.y;
-						context.fillRect(xLoc*20, yLoc*20, 20, 20);
-			
-					}					
+					// let the server tell me what board to draw
 				}
 			}
 		);

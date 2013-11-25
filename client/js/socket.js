@@ -38,7 +38,7 @@ socket.on('game', function(gameObj){
 	}
 	if(game.state == "active") {
 		var players = game.players;
-		for ( var i = 0; i < player.length; i++ ) {
+		for ( var i = 0; i < players.length; i++ ) {
 			var player = players[i];
 			if ( player.id = playerId ) {
 				playerPosition = player.position;
