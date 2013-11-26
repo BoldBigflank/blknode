@@ -74,27 +74,6 @@ newRound = function(cb){
     game.correctAnswer = questionArray[0];
     game.answers = _.shuffle(questionArray);
 
-
-    // // Load a new file
-    // var files = fs.readdirSync('categories')
-    // files = _.difference(files, ['.', '..'])
-    // var path = files[Math.floor(Math.random()*files.length)]
-    // var data = fs.readFileSync('categories/' + path)
-    // var dataArray = data.toString().split("\n");
-    //     game.title = dataArray[0];
-    //     answers = dataArray.splice(1);
-    //     game.count = answers.length
-
-    // // Pick the beginning time
-    // var now = new Date().getTime(); // Milliseconds
-    // var begin = now + prepTime;
-    // game.begin = begin;
-
-    // var end = begin + roundTime;
-    // game.end = end;
-
-    // game.title = ""
-
     game.state = "prep"; // DEBUG: Make prep first in prod
     setTimeout(function(){
         console.log("timer 1 ended")

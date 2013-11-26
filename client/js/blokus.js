@@ -2,6 +2,8 @@ var chosenPieceId = -1;
 var chosenPiece;
 var completeBoard;
 var images = [];
+var boardWidth = 20;
+var boardHeight = 20;
 
 window.onload = function () {
 	var boardElem = document.getElementById('boardCanvas');
@@ -175,7 +177,7 @@ function drawOutline(event) {
 				var pieceX = available[chosenPieceId][i].x + x;
 				var pieceY = y + available[chosenPieceId][i].y;
 
-				boardContext.fillStyle = 'orange';
+				boardContext.fillStyle = (isValidPosition({'x':pieceX, 'y':pieceY})) ? 'red':'orange';
 				boardContext.fillRect(pieceX*20, pieceY*20, 20, 20);
 			}
 			// draw the old location with correct items
@@ -320,3 +322,28 @@ function drawPiece(index) {
 		    	drawPieceList();
 	    	}
 	    };
+
+function isValidPosition(tile){
+	// On the board
+	if(tile.x < 0 || tile.x >= boardWidth || tile.y < 0 || tile.y >= boardHeight) return false;
+	// Position is not open
+	var positionIsOpen = (game.board[tile.x][tile.y] == 0);
+	return positionIsOpen && !hasFacingTile(tile);
+}
+
+
+
+function hasFacingTile(tile){
+	var x = tile.x;
+    var y = tile.y;
+    
+    // Above
+    if(y < boardHeight-1 && game.board[x][y+1] === game.turn ) return true;
+    // Below
+    if(y > 0 && game.board[x][y-1] === game.turn ) return true;
+    // Right
+    if(x < boardWidth-1 && game.board[x+1][y] === game.turn ) return true;
+    // Right
+    if(x > 0 && game.board[x-1][y] === game.turn ) return true;
+    return false;
+}
