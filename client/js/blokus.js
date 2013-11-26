@@ -116,9 +116,9 @@ function choosePiece(event) {
 	var pieceContext = pieceChoices.getContext('2d');
 	
 	event = event || window.event;
-
-	var x = Math.floor( event.pageX - pieceChoices.offsetLeft );
-	var y = Math.floor( event.pageY - pieceChoices.offsetTop );
+	var pos = findPos(this);
+	var x = Math.floor( event.pageX - pos.x );
+	var y = Math.floor( event.pageY - pos.y );
 
 	for ( var i = 0; i < pieceCanvasLocation.length; i++ ) {
 		var canvasLocation = pieceCanvasLocation[i];
@@ -185,13 +185,26 @@ function removeOutline(event){
 	}
 }
 
+function findPos(obj) {
+    var curleft = 0, curtop = 0;
+    if (obj.offsetParent) {
+        do {
+            curleft += obj.offsetLeft;
+            curtop += obj.offsetTop;
+        } while (obj = obj.offsetParent);
+        return { x: curleft, y: curtop };
+    }
+    return undefined;
+}
+
 function drawOutline(event) {
 	var boardElem = document.getElementById('boardCanvas');
 	var boardContext = boardElem.getContext('2d');
 
 	if ( chosenPieceId != -1 ) {
-		var x = Math.floor( ( event.pageX - boardElem.offsetLeft ) / 20 );
-		var y = Math.floor( ( event.pageY - boardElem.offsetTop ) / 20 );
+		var pos = findPos(this);
+		var x = Math.floor( ( event.pageX - pos.x) / 20 );
+		var y = Math.floor( ( event.pageY - pos.y ) / 20 );
 		if ( x != outlineX || y != outlineY ) {
 			// draw the overlay back to original
 			removeOutline(event);
@@ -224,9 +237,9 @@ function getLocation(event) {
 	var context = boardElem.getContext('2d');
 	
 	event = event || window.event;
-
-	var x = Math.floor( ( event.pageX - boardElem.offsetLeft ) / 20 );
-	var y = Math.floor( ( event.pageY - boardElem.offsetTop ) / 20 );
+	var pos = findPos(this);	
+	var x = Math.floor( ( event.pageX - pos.x) / 20 );
+	var y = Math.floor( ( event.pageY - pos.y ) / 20 );
 
 
 	var thisPiece = [];
@@ -296,29 +309,6 @@ function drawPieceList(){
 	}
 	
 }
-
-
-function drawPiece(index) {
-	var maxSize = available[index].length;
-
-	for ( var i = 0; i < maxSize; i++ ) {
-		for ( var j = 0; j < maxSize; j++ ) {
-			$( "#link-" + index ).append( "<div id='piece-" + index + "-" + j + "-" + i + "' style='display: inline-block;width:20px;height:20px;' />" );
-		}
-
-			$( "#link-" + index ).append( "<br/>");
-	}
-			$( "#link-" + index ).append( '<a href="#" onclick="javascript:flip(' + index + ');">Flip</a><a href="#" onclick="javascript:rotate(' + index + ');">Rotate</a>');
-			$( "#link-" + index ).append( "<br/>");
-	
-	for( var i = 0; i < available[index].length; i++ ) {
-		var thisBlock = available[index][i];
-		var element = document.getElementById('piece-' + index + '-' + thisBlock.x + '-' + thisBlock.y);
-		element.style.backgroundColor = colors[1];
-	}
-    
-};
-
 
 function rotate() {
 	//if ( chosenPieceId != -1 ) {
