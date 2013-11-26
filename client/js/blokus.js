@@ -284,8 +284,9 @@ function drawPiece(index) {
 
 
 	    function rotate() {
-		    if ( chosenPieceId != -1 ) {
-		    	var pieceToChange = available[chosenPieceId];
+		    //if ( chosenPieceId != -1 ) {
+		    for (var x in available){
+		    	var pieceToChange = available[x];
 		    	var replacementPiece = [];
 		    	var minX = pieceToChange.length;
 		    	var minY = pieceToChange.length;
@@ -301,20 +302,21 @@ function drawPiece(index) {
 			    		replacementPiece[i].x = replacementPiece[i].x - minX;
 			    	}
 			    }
-		    	available[chosenPieceId] = replacementPiece;
+		    	available[x] = replacementPiece;
 		    	drawPieceList();
 		    }
 	    };
 
 	    function flip() {
-		    if ( chosenPieceId != -1 ) {
-		    	var pieceToChange = available[chosenPieceId];
+		    //if ( chosenPieceId != -1 ) {
+		    for( var x in available){
+		    	var pieceToChange = available[x];
 		    	var replacementPiece = [];
 		    	for ( var i = 0; i < pieceToChange.length; i++ ) {
 			    	var point = pieceToChange[i];
 			    	replacementPiece.push( {'x':point.y, 'y':point.x } );
 		    	}
-		    	available[chosenPieceId] = replacementPiece;
+		    	available[x] = replacementPiece;
 		    	drawPieceList();
 	    	}
 	    };
