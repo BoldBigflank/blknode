@@ -242,7 +242,7 @@ exports.setState = function(state, cb){
     }
 }
 
-function findFacingTile(tile){
+function hasFacingTile(tile){
     var x = tile.x;
     var y = tile.y;
     console.log("(" + x + "," + y + ")" + (x+y) );
@@ -313,7 +313,7 @@ exports.addPiece = function(id, placement, piece, cb){
         }
 
 
-        if ( findFacingTile( tile ) == true) {
+        if ( hasFacingTile( tile ) == true) {
             cb("This placement has a facing tile at " + tile.x + tile.y, null)
             return;
         };
