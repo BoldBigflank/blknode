@@ -173,11 +173,15 @@ function drawOutline(event) {
 			}
 
 			// draw an outline of the new version
+			var validPlacement = isValidPlacement(x,y,available[chosenPieceId]);
+
 			for ( var i = 0; i < available[chosenPieceId].length; i++ ) {
 				var pieceX = available[chosenPieceId][i].x + x;
 				var pieceY = y + available[chosenPieceId][i].y;
-
-				boardContext.fillStyle = (isValidPosition({'x':pieceX, 'y':pieceY})) ? 'red':'orange';
+				var fillColor = 'orange'
+				if(validPlacement) fillColor = 'green'
+				else if ( !isValidPosition({'x':pieceX, 'y':pieceY}) ) fillColor = 'red';
+				boardContext.fillStyle = fillColor;
 				boardContext.fillRect(pieceX*20, pieceY*20, 20, 20);
 			}
 			// draw the old location with correct items
@@ -323,12 +327,57 @@ function drawPiece(index) {
 	    	}
 	    };
 
+function isValidPlacement(x,y,placement){
+	var hasDiagonalConnector = false;
+	for(var i in placement){
+		var tile = { 'x':x+placement[i].x, 'y':y+placement[i].y }
+		hasDiagonalConnector = hasDiagonalConnector || findDiagonalConnector(tile);
+
+		if(!isValidPosition(tile)){
+			console.log("isValidPlacement: No", tile.x, tile.y)
+			return false;
+		} 
+	}
+	return hasDiagonalConnector;
+}
+
+function findDiagonalConnector(tile){
+    var x = tile.x;
+    var y = tile.y;
+
+    // Starting positions
+    if( player.position == 0 && x == 0             && y == 0 )  return true;
+    if( player.position == 1 && x == boardWidth-1  && y == 0)  return true;
+    if( player.position == 2 && x == boardWidth-1  && y == boardHeight-1  )              return true;
+    if( player.position == 3 && x == 0             && y == boardHeight-1  )              return true;
+
+    // Above right
+    if( x < boardWidth-1 && y < boardHeight-1 && game.board[x+1][y+1] === player.position ) return true;
+    // Above left
+    if( x > 0 && y < boardHeight-1 && game.board[x-1][y+1] === player.position ) return true;
+    // Below left
+    if( x > 0  && y > 0 && game.board[x-1][y-1] === player.position ) return true;
+    // Below right
+    if( x < boardWidth-1 && y > 0 && game.board[x+1][y-1] === player.position ) return true;
+    return false;
+}
+
 function isValidPosition(tile){
 	// On the board
-	if(tile.x < 0 || tile.x >= boardWidth || tile.y < 0 || tile.y >= boardHeight) return false;
+	if(tile.x < 0 || tile.x >= boardWidth || tile.y < 0 || tile.y >= boardHeight){ 
+		console.log("On the board")
+		return false;
+	}
 	// Position is not open
-	var positionIsOpen = (game.board[tile.x][tile.y] == 0);
-	return positionIsOpen && !hasFacingTile(tile);
+	if (game.board[tile.x][tile.y] !== null){ 
+		console.log("position not open", tile.x, tile.y, game.board[tile.x][tile.y])
+		return false;
+	}
+	if (hasFacingTile(tile)){
+		console.log("has facing tile") ;
+		return false;
+	}
+	return true;
 }
 
 
@@ -338,12 +387,12 @@ function hasFacingTile(tile){
     var y = tile.y;
     
     // Above
-    if(y < boardHeight-1 && game.board[x][y+1] === game.turn ) return true;
+    if(y < boardHeight-1 && game.board[x][y+1] === player.position ) return true;
     // Below
-    if(y > 0 && game.board[x][y-1] === game.turn ) return true;
+    if(y > 0 && game.board[x][y-1] === player.position ) return true;
     // Right
-    if(x < boardWidth-1 && game.board[x+1][y] === game.turn ) return true;
+    if(x < boardWidth-1 && game.board[x+1][y] === player.position ) return true;
     // Right
-    if(x > 0 && game.board[x-1][y] === game.turn ) return true;
+    if(x > 0 && game.board[x-1][y] === player.position ) return true;
     return false;
 }
