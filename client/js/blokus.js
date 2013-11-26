@@ -17,16 +17,21 @@ window.onload = function () {
    boardElem.onclick = getLocation;
    pieceChoices.onclick = choosePiece;
    boardElem.onmousemove = drawOutline;
-   window.addEventListener( "keypress", handleKeyPress, false );
+   boardElem.onmouseout = removeOutline;
+   window.onkeypress = handleKeyPress;
 }
 
 function handleKeyPress(e){
 	if(e.keyCode == 114 || e.keyCode == 82){
 		// Rotate
+		removeOutline(e);
 		rotate();
+		drawOutline(e);
 	}
 	if(e.keyCode == 102 || e.keyCode == 70){
+		removeOutline(e);
 		flip();
+		drawOutline(e);
 	}
 	return null;
 }
@@ -159,6 +164,27 @@ function drawGrid() {
 var outlineX = -1;
 var outlineY = -1;
 
+function removeOutline(event){
+	if(typeof chosenPieceId == "undefined" || chosenPieceId == -1) return;
+	var boardElem = document.getElementById('boardCanvas');
+	var boardContext = boardElem.getContext('2d');
+	// draw the overlay back to original
+	for ( var i = 0; i < available[chosenPieceId].length; i++ ) {
+		var pieceX = available[chosenPieceId][i].x + outlineX;
+		var pieceY = outlineY + available[chosenPieceId][i].y;
+
+		if ( pieceX >= 0 && pieceY >= 0 && pieceX < 20 && pieceY < 20 ) {
+			if ( completeBoard && completeBoard[pieceX][pieceY] != null ) {
+				boardContext.drawImage(images[completeBoard[pieceX][pieceY]], pieceX*20, pieceY*20);
+			} else {
+				boardContext.fillStyle = 'white';
+				boardContext.fillRect(pieceX*20, pieceY*20, 20, 20);
+			}
+			boardContext.strokeRect(pieceX*20, pieceY*20, 20, 20);
+		}
+	}
+}
+
 function drawOutline(event) {
 	var boardElem = document.getElementById('boardCanvas');
 	var boardContext = boardElem.getContext('2d');
@@ -168,20 +194,7 @@ function drawOutline(event) {
 		var y = Math.floor( ( event.pageY - boardElem.offsetTop ) / 20 );
 		if ( x != outlineX || y != outlineY ) {
 			// draw the overlay back to original
-			for ( var i = 0; i < available[chosenPieceId].length; i++ ) {
-				var pieceX = available[chosenPieceId][i].x + outlineX;
-				var pieceY = outlineY + available[chosenPieceId][i].y;
-
-				if ( pieceX >= 0 && pieceY >= 0 && pieceX < 20 && pieceY < 20 ) {
-					if ( completeBoard && completeBoard[pieceX][pieceY] != null ) {
-						boardContext.drawImage(images[completeBoard[pieceX][pieceY]], pieceX*20, pieceY*20);
-					} else {
-						boardContext.fillStyle = 'white';
-						boardContext.fillRect(pieceX*20, pieceY*20, 20, 20);
-					}
-					boardContext.strokeRect(pieceX*20, pieceY*20, 20, 20);
-				}
-			}
+			removeOutline(event);
 
 			// draw an outline of the new version
 			var validPlacement = isValidPlacement(x,y,available[chosenPieceId]);
@@ -204,7 +217,7 @@ function drawOutline(event) {
 }
 
 function getLocation(event) {
-	if( typeof chosenPieceId == "undefined" || chosenPieceId == null ) return;
+	if( typeof chosenPieceId == "undefined" || chosenPieceId == -1 ) return;
 	var boardElem = document.getElementById('boardCanvas');
 	var pieceChoices = document.getElementById('pieceChoices');
 	var pieceContext = pieceChoices.getContext('2d');
@@ -218,28 +231,26 @@ function getLocation(event) {
 
 	var thisPiece = [];
 	
-	if( chosenPieceId != -1 ) {
-		for ( var i = 0; i < available[chosenPieceId].length; i++ ) {
-			thisPiece.push({'x': available[chosenPieceId][i].x + x , 'y': y + available[chosenPieceId][i].y })
-		}
-		
-
-		// check if move is legal
-		socket.emit('addPiece', { piece: chosenPieceId, placement: thisPiece }, 
-			function(error) {
-				if (error) {
-					console.log(error);
-				}
-				else {
-					// Remove the selection box
-					chosenPieceId = -1;
-					drawPieceList();
-					
-					// let the server tell me what board to draw
-				}
-			}
-		);
+	for ( var i = 0; i < available[chosenPieceId].length; i++ ) {
+		thisPiece.push({'x': available[chosenPieceId][i].x + x , 'y': y + available[chosenPieceId][i].y })
 	}
+	
+
+	// check if move is legal
+	socket.emit('addPiece', { piece: chosenPieceId, placement: thisPiece }, 
+		function(error) {
+			if (error) {
+				console.log(error);
+			}
+			else {
+				// Remove the selection box
+				chosenPieceId = -1;
+				drawPieceList();
+				
+				// let the server tell me what board to draw
+			}
+		}
+	);
 }
 
 
@@ -300,48 +311,53 @@ function drawPiece(index) {
 };
 
 
-	    function rotate() {
-		    //if ( chosenPieceId != -1 ) {
-		    for (var x in available){
-		    	var pieceToChange = available[x];
-		    	var replacementPiece = [];
-		    	var minX = pieceToChange.length;
-		    	var minY = pieceToChange.length;
+function rotate() {
+	//if ( chosenPieceId != -1 ) {
+    for (var x in available){
+    	var pieceToChange = available[x];
+    	var replacementPiece = [];
+    	var minX = pieceToChange.length;
+    	var minY = pieceToChange.length;
 
-		    	for ( var i = 0; i < pieceToChange.length; i++ ) {
-			    	var point = pieceToChange[i];
-			    	replacementPiece.push( {'x':pieceToChange.length - point.y, 'y':point.x } );
-			    	minX = Math.min( minX, pieceToChange.length - point.y );
-		    	}
-		    	if ( minX > 0 ) {
-			    	for ( var i = 0; i < pieceToChange.length; i++ ) {
-				    	var point = pieceToChange[i];
-			    		replacementPiece[i].x = replacementPiece[i].x - minX;
-			    	}
-			    }
-		    	available[x] = replacementPiece;
-		    	drawPieceList();
-		    }
-	    };
-
-	    function flip() {
-		    //if ( chosenPieceId != -1 ) {
-		    for( var x in available){
-		    	var pieceToChange = available[x];
-		    	var replacementPiece = [];
-		    	for ( var i = 0; i < pieceToChange.length; i++ ) {
-			    	var point = pieceToChange[i];
-			    	replacementPiece.push( {'x':point.y, 'y':point.x } );
-		    	}
-		    	available[x] = replacementPiece;
-		    	drawPieceList();
+    	for ( var i = 0; i < pieceToChange.length; i++ ) {
+	    	var point = pieceToChange[i];
+	    	replacementPiece.push( {'x':pieceToChange.length - point.y, 'y':point.x } );
+	    	minX = Math.min( minX, pieceToChange.length - point.y );
+    	}
+    	if ( minX > 0 ) {
+	    	for ( var i = 0; i < pieceToChange.length; i++ ) {
+		    	var point = pieceToChange[i];
+	    		replacementPiece[i].x = replacementPiece[i].x - minX;
 	    	}
-	    };
+	    }
+    	available[x] = replacementPiece;
+    	drawPieceList();
+    }
+};
+
+function flip() {
+    //if ( chosenPieceId != -1 ) {
+    for( var x in available){
+    	var pieceToChange = available[x];
+    	var replacementPiece = [];
+    	for ( var i = 0; i < pieceToChange.length; i++ ) {
+	    	var point = pieceToChange[i];
+	    	replacementPiece.push( {'x':point.y, 'y':point.x } );
+    	}
+    	available[x] = replacementPiece;
+    	drawPieceList();
+	}
+};
 
 function isValidPlacement(x,y,placement){
 	var hasDiagonalConnector = false;
 	for(var i in placement){
 		var tile = { 'x':x+placement[i].x, 'y':y+placement[i].y }
+		
+		if( tile.x<0 || tile.y < 0 || tile.x >= boardWidth || tile.y >= boardHeight  ){
+            return false;
+        }
+
 		hasDiagonalConnector = hasDiagonalConnector || findDiagonalConnector(tile);
 
 		if(!isValidPosition(tile)){
