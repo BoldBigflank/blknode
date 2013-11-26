@@ -17,8 +17,19 @@ window.onload = function () {
    boardElem.onclick = getLocation;
    pieceChoices.onclick = choosePiece;
    boardElem.onmousemove = drawOutline;
+   window.addEventListener( "keypress", handleKeyPress, false );
 }
 
+function handleKeyPress(e){
+	if(e.keyCode == 114 || e.keyCode == 82){
+		// Rotate
+		rotate();
+	}
+	if(e.keyCode == 102 || e.keyCode == 70){
+		flip();
+	}
+	return null;
+}
 
 	    var colors = ['green', 'blue', 'purple', 'red'];
 
