@@ -28,18 +28,21 @@
 		<div class="container">
 			<div class="row">
 					<h1>Welcome to Polyominus</h1>
-					<p>
+					<div>
 						<canvas id="boardCanvas" width="400" height="400" onclick="getLocation()">
 							Your browser does not support canvas.
 						</canvas>
-						<a href="#" onclick="javascript:flip();"><span class="glyphicon glyphicon-resize-vertical"></span></a><a href="#" onclick="javascript:rotate();"><span class="glyphicon glyphicon-refresh"></span></a>
+						<div class="btn-group-vertical">
+							<a class="btn btn-default" href="#" onclick="javascript:rotate();"><span class="glyphicon glyphicon-refresh"></span> Rotate (R)</a>
+							<a class="btn btn-default" href="#" onclick="javascript:flip();"><span class="glyphicon glyphicon-resize-vertical"> Flip (F)</span></a>
+						</div>
 						<canvas id="pieceChoices" width="800" height="300">
 							Your browser does not support canvas.
 						</canvas>
 						<div class="status hidden alert alert-info">...</div>
 						<div class="error hidden alert alert-danger">...</div>
 						
-					</p>
+					</div>
 					<div id="pieceChoice"/>
 				<div class="col-md-4">
 					<h2>Scoreboard</h2>
