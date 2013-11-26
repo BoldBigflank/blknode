@@ -253,7 +253,16 @@ function getLocation(event) {
 	);
 }
 
-
+function pass() {
+	socket.emit('pass', 
+		function(error) {
+			if (error) {
+				console.log(error);
+			}
+		}
+	);
+	
+}
 
 //Draw Piece List Function
 function drawPieceList(){

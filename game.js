@@ -258,6 +258,10 @@ function findDiagonalConnector(tile){
     return false;
 }
 
+exports.pass = function(state, cb){
+    cb("Not yet implemented", null);
+}
+
 exports.addPiece = function(id, placement, piece, cb){
     // cb(err, res)
     var player = _.findWhere(game.players, {position:game.turn})
