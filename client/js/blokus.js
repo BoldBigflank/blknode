@@ -25,16 +25,19 @@ window.onload = function () {
 }
 
 function handleKeyPress(e){
-	if(e.keyCode == 114 || e.keyCode == 82){
+	if(e.keyCode == 114 || e.keyCode == 82){ // R
 		// Rotate
 		removeOutline(e);
 		rotate();
 		drawOutline(e);
 	}
-	if(e.keyCode == 102 || e.keyCode == 70){
+	if(e.keyCode == 102 || e.keyCode == 70){ // F
 		removeOutline(e);
 		flip();
 		drawOutline(e);
+	}
+	if(e.keyCode == 80 || e.keyCode == 112){ // P
+		pass();
 	}
 	if(e.keyCode == 49 ){
 		drawPieceList(1);
