@@ -116,16 +116,18 @@ function preLoad() {
 function getMaxDimension(piece, direction){
 	var maxSize = 0;
 
-	for ( var i = 0; i < piece.length; i++ ) {
-		var point = piece[i];
-		if ( direction == null || direction == 'x' ) {
-			if ( point.x > maxSize ) {
-				maxSize = point.x;
+	if ( piece != null ) {
+		for ( var i = 0; i < piece.length; i++ ) {
+			var point = piece[i];
+			if ( direction == null || direction == 'x' ) {
+				if ( point.x > maxSize ) {
+					maxSize = point.x;
+				}
 			}
-		}
-		if ( direction == null || direction == 'y' ) {
-			if ( point.y > maxSize ) {
-				maxSize = point.y;
+			if ( direction == null || direction == 'y' ) {
+				if ( point.y > maxSize ) {
+					maxSize = point.y;
+				}
 			}
 		}
 	}
@@ -319,11 +321,21 @@ function drawPieceList(page){
 			// var pieceIndex = player.pieces[i];
 			var piece = available[i];
 
+			var xOffset = Math.floor( ( getMaxDimension(piece) - getMaxDimension(piece, 'x') ) / 2 );
+			var yOffset = Math.floor( ( getMaxDimension(piece) - getMaxDimension(piece, 'y') ) / 2 );
+
+			var canvasLocation = pieceCanvasLocation[i];
+			var x = canvasLocation.x + xOffset * 20;
+			var y = canvasLocation.y + yOffset * 20;
+			if ( i == 14 ) {
+				console.log({'xOffset': xOffset, 'yOffset':yOffset});
+				console.log({'max': getMaxDimension(piece),
+				'xMax':getMaxDimension(piece, 'x'),
+				'yMax':getMaxDimension(piece, 'y')});
+			}
+
 			for ( var j = 0; j < piece.length; j++ ) {
 				var point = piece[j];
-				var canvasLocation = pieceCanvasLocation[i];
-				var x = canvasLocation.x;
-				var y = canvasLocation.y;
 				
 				var xLoc = x + ( point.x * 20 );
 				var yLoc = y + ( point.y * 20 );	
