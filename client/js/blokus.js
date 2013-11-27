@@ -77,36 +77,35 @@ function handleKeyPress(e){
 
 	    // where each piece appers on the 'choose piece' canvas
 	    var pieceCanvasLocation = [
-	    {'x':40, 'y':10, 'size':1, 'page': 1},
-	    {'x':120, 'y':10, 'size':2, 'page': 1},
-	    {'x':200, 'y':10, 'size':3, 'page': 1},
+	    {'x':40, 'y':10, 'page': 1},
+	    {'x':120, 'y':10, 'page': 1},
+	    {'x':200, 'y':10, 'page': 1},
 	    
-		{'x':40, 'y':110, 'size':3, 'page': 1},
-	    {'x':120, 'y':110, 'size':4, 'page': 1},
-	    {'x':200, 'y':110, 'size':4, 'page': 1},
+		{'x':40, 'y':110, 'page': 1},
+	    {'x':120, 'y':110, 'page': 1},
+	    {'x':200, 'y':110, 'page': 1},
 	    
-		{'x':20, 'y':210, 'size':4, 'page': 1},
-	    {'x':120, 'y':210, 'size':4, 'page': 1},
-	    {'x':200, 'y':210, 'size':4, 'page': 1},
+		{'x':20, 'y':210, 'page': 1},
+	    {'x':120, 'y':210, 'page': 1},
+	    {'x':200, 'y':210, 'page': 1},
 	    
-		{'x':20, 'y':310, 'size':5, 'page':1},
-	    {'x':130, 'y':310, 'size':5, 'page':1},
-	    {'x':210, 'y':310, 'size':5, 'page':1},
+		{'x':20, 'y':310, 'page':1},
+	    {'x':130, 'y':310, 'page':1},
+	    {'x':210, 'y':310, 'page':1},
 		
-		{'x':5, 'y':10, 'size':5, 'page': 2},
-	    {'x':100, 'y':10, 'size':5, 'page': 2},
-	    {'x':175, 'y':10, 'size':5, 'page': 2},
+		{'x':5, 'y':10, 'page': 2},
+	    {'x':100, 'y':10, 'page': 2},
+	    {'x':175, 'y':10, 'page': 2},
 	    
-		{'x':20, 'y':140, 'size':5, 'page': 2},
-	    {'x':110, 'y':140, 'size':5, 'page': 2},
-	    {'x':190, 'y':140, 'size':5, 'page': 2},
+		{'x':20, 'y':140, 'page': 2},
+	    {'x':110, 'y':140, 'page': 2},
+	    {'x':190, 'y':140, 'page': 2},
 	    
-		{'x':20, 'y':250, 'size':5, 'page': 2},
-	    {'x':110, 'y':250, 'size':5, 'page': 2},
-	    {'x':190, 'y':250, 'size':5, 'page': 2}
+		{'x':20, 'y':250, 'page': 2},
+	    {'x':110, 'y':250, 'page': 2},
+	    {'x':190, 'y':250, 'page': 2}
 	    ];
 	
-		
 function preLoad() {
 	for (var i = 0; i < colors.length; ++i) {
 		images[i] = new Image();
@@ -114,16 +113,20 @@ function preLoad() {
 	}
 }
 
-function getMaxDimension(piece){
+function getMaxDimension(piece, direction){
 	var maxSize = 0;
 
 	for ( var i = 0; i < piece.length; i++ ) {
 		var point = piece[i];
-		if ( point.x > maxSize ) {
-			maxSize = point.x;
+		if ( direction == null || direction == 'x' ) {
+			if ( point.x > maxSize ) {
+				maxSize = point.x;
+			}
 		}
-		if ( point.y > maxSize ) {
-			maxSize = point.y;
+		if ( direction == null || direction == 'y' ) {
+			if ( point.y > maxSize ) {
+				maxSize = point.y;
+			}
 		}
 	}
 	
@@ -143,8 +146,8 @@ function choosePiece(event) {
 		var canvasLocation = pieceCanvasLocation[i];
 		if ( x >= canvasLocation.x
 			&& y >= canvasLocation.y 
-			&& x <= canvasLocation.x + canvasLocation.size * 20
-			&& y <= canvasLocation.y + canvasLocation.size * 20
+			&& x <= canvasLocation.x + getMaxDimension(available[i]) * 20
+			&& y <= canvasLocation.y + getMaxDimension(available[i]) * 20
 			&& canvasLocation.page == piecePage) {
 				if(player.pieces.indexOf(i) != -1)
 					chosenPieceId = i;
@@ -222,8 +225,8 @@ function drawOutline(event) {
 
 	if ( chosenPieceId != -1 ) {
 		var pos = findPos(this);
-		var x = Math.floor( ( event.pageX - pos.x) / 20 );
-		var y = Math.floor( ( event.pageY - pos.y ) / 20 );
+		var x = Math.floor( ( event.pageX - pos.x ) / 20 - ( getMaxDimension(available[chosenPieceId], 'x') / 2 ) );
+		var y = Math.floor( ( event.pageY - pos.y ) / 20 - ( getMaxDimension(available[chosenPieceId], 'y') / 2 ) );
 		if ( x != outlineX || y != outlineY ) {
 			// draw the overlay back to original
 			removeOutline(event);
@@ -257,8 +260,8 @@ function getLocation(event) {
 	
 	event = event || window.event;
 	var pos = findPos(this);	
-	var x = Math.floor( ( event.pageX - pos.x) / 20 );
-	var y = Math.floor( ( event.pageY - pos.y ) / 20 );
+	var x = Math.floor( ( event.pageX - pos.x ) / 20 - ( getMaxDimension(available[chosenPieceId], 'x') / 2 ) );
+	var y = Math.floor( ( event.pageY - pos.y ) / 20 - ( getMaxDimension(available[chosenPieceId], 'y') / 2 ) );
 
 
 	var thisPiece = [];
