@@ -27,47 +27,42 @@
 	    </div>
 		<div class="container">
 			<div class="row">
-					<h1>Welcome to Polyominus</h1>
-					<div>
+					<div class="col-md-3 text-center">
+						<h2>Scoreboard</h2>
+						<ul class="list-group scoreboard">
+						<li class="list-group-item"></li>
+						</ul>
+					</div>
+					
+					<div class = "col-md-6 text-center">
+						<h2>Game Board</h2>
+					
 						<canvas id="boardCanvas" width="400" height="400" onclick="getLocation()">
 							Your browser does not support canvas.
 						</canvas>
-						<div class="btn-group-vertical">
+						<div class="btn-group">
+							<a class="btn btn-default" href="#" onclick="javascript:pass();">Pass (P)</a>
 							<a class="btn btn-default" href="#" onclick="javascript:rotate();"><span class="glyphicon glyphicon-refresh"></span> Rotate (R)</a>
 							<a class="btn btn-default" href="#" onclick="javascript:flip();"><span class="glyphicon glyphicon-resize-vertical"> Flip (F)</span></a>
 						</div>
-						<canvas id="pieceChoices" width="800" height="300">
+					</div>
+					
+					<div class="col-md-3 text-center">
+						<h2>Available Pieces</h2>
+						<canvas id="pieceChoices" width="280" height="400">
 							Your browser does not support canvas.
 						</canvas>
-						<div class="status hidden alert alert-info">...</div>
-						<div class="error hidden alert alert-danger">...</div>
-						
+						<div class="btn-group">
+							<a class="btn btn-default" href="#" onclick="javascript:drawPieceList(1);">1</a>
+							<a class="btn btn-default" href="#" onclick="javascript:drawPieceList(2);">2</a>
+						</div>
 					</div>
-					<div id="pieceChoice"/>
-				<div class="col-md-4">
-					<h2>Scoreboard</h2>
-					<ul class="list-group scoreboard">
-						<li class="list-group-item"></li>
-					</ul>
-				</div>
-				
+			</div>
+			<div class="row" id="status">
+				<div class="status hidden alert alert-info">...</div>
+				<div class="error hidden alert alert-danger">...</div>
 			</div>
 		</div>
-		
-		<script>
-		var boardElem = document.getElementById('boardCanvas');
-
-		if (boardElem && boardElem.getContext) {
-			var context = boardElem.getContext('2d');
-		  	if (context) {
-		    	for ( var i = 0; i < 20; i++ ) {
-			  		for ( var j = 0; j < 20; j++ ) {
-			    		context.strokeRect(i*20, j*20, 20, 20);
-					}
-				}
-			}
-		}
-		</script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
 	</body>
 </html>

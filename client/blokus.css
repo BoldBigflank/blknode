@@ -1,10 +1,13 @@
 body {
 	background-color: darkgray;
-	text-align: center;
-	margin-top:50px;
+	padding-top: 50px;
 }
 
 #boardCanvas, #pieceChoices {
 	margin:auto;
 	background-color: white;
+}
+
+#status {
+	margin-top: 50px;
 }

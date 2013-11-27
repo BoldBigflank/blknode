@@ -84,6 +84,15 @@ module.exports.listen = function(app){
           }
         })
       })
+
+      socket.on('pass', function(data){
+          game.pass(data, function(err, res){
+            if (err) { socket.emit("alert", err) }
+            else{ 
+                io.sockets.emit("game", res )
+            }
+          })  
+      })
     });
 
     game.eventEmitter.on('state', function(res) {
