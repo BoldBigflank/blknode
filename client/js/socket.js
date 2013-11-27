@@ -24,7 +24,7 @@ socket.on('game', function(gameObj){
 			var thisPlayer = players[i];
 			if ( thisPlayer.id == player.id ) {
 				player = thisPlayer;
-				drawPieceList();
+				drawPieceList(1);
 			}
 			if(thisPlayer.state != "spectating")
 				$("ul.scoreboard").append("<li class='list-group-item'>" + thisPlayer.name + ": " + thisPlayer.score + "</li>");
@@ -48,7 +48,7 @@ socket.emit('join', function(playerObj){
 	var spectating = (playerObj.state == 'spectating') ? " (Spectating)" : "";
 	$(".username").text(playerObj.name + spectating);
 
-	drawPieceList();
+	drawPieceList(1);
 });
 
 

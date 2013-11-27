@@ -7,3 +7,7 @@ body {
 	margin:auto;
 	background-color: white;
 }
+
+#status {
+	margin-top: 50px;
+}

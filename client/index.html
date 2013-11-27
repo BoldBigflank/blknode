@@ -27,7 +27,7 @@
 	    </div>
 		<div class="container">
 			<div class="row">
-					<div class="col-md-3">
+					<div class="col-md-3 text-center">
 						<h2>Scoreboard</h2>
 						<ul class="list-group scoreboard">
 						<li class="list-group-item"></li>
@@ -46,16 +46,21 @@
 							<a class="btn btn-default" href="#" onclick="javascript:flip();"><span class="glyphicon glyphicon-resize-vertical"> Flip (F)</span></a>
 						</div>
 					</div>
-						
-					<canvas id="pieceChoices" width="800" height="300">
-						Your browser does not support canvas.
-					</canvas>
-					<div class="status hidden alert alert-info">...</div>
-					<div class="error hidden alert alert-danger">...</div>
-						
 					
-
-				
+					<div class="col-md-3 text-center">
+						<h2>Available Pieces</h2>
+						<canvas id="pieceChoices" width="280" height="400">
+							Your browser does not support canvas.
+						</canvas>
+						<div class="btn-group">
+							<a class="btn btn-default" href="#" onclick="javascript:drawPieceList(1);">1</a>
+							<a class="btn btn-default" href="#" onclick="javascript:drawPieceList(2);">2</a>
+						</div>
+					</div>
+			</div>
+			<div class="row" id="status">
+				<div class="status hidden alert alert-info">...</div>
+				<div class="error hidden alert alert-danger">...</div>
 			</div>
 		</div>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>

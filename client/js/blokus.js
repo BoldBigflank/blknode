@@ -4,6 +4,7 @@ var completeBoard;
 var images = [];
 var boardWidth = 20;
 var boardHeight = 20;
+var piecePage = 1;
 
 window.onload = function () {
 	var boardElem = document.getElementById('boardCanvas');
@@ -12,8 +13,10 @@ window.onload = function () {
 	var context = boardElem.getContext('2d');
 	
 	preLoad();
-	drawGrid();
 	
+	images[3].onload = function(){ drawPieceList(1)};
+	
+   drawGrid();
    boardElem.onclick = getLocation;
    pieceChoices.onclick = choosePiece;
    boardElem.onmousemove = drawOutline;
@@ -64,29 +67,35 @@ function handleKeyPress(e){
 
 	    // where each piece appers on the 'choose piece' canvas
 	    var pieceCanvasLocation = [
-	    {'x':20, 'y':10, 'size':1},
-	    {'x':90, 'y':10, 'size':2},
-	    {'x':170, 'y':10, 'size':3},
-	    {'x':250, 'y':10, 'size':3},
-	    {'x':330, 'y':10, 'size':4},
-	    {'x':410, 'y':10, 'size':4},
-	    {'x':510, 'y':10, 'size':4},
-	    {'x':610, 'y':10, 'size':4},
-	    {'x':710, 'y':10, 'size':4},
-	    {'x':10, 'y':110, 'size':5},
-	    {'x':130, 'y':110, 'size':5},
-	    {'x':250, 'y':110, 'size':5},
-	    {'x':370, 'y':110, 'size':5},
-	    {'x':490, 'y':110, 'size':5},
-	    {'x':610, 'y':110, 'size':5},
-	    {'x':730, 'y':110, 'size':5},
-	    {'x':10, 'y':230, 'size':5},
-	    {'x':130, 'y':230, 'size':5},
-	    {'x':250, 'y':230, 'size':5},
-	    {'x':370, 'y':230, 'size':5},
-	    {'x':490, 'y':210, 'size':5}
+	    {'x':40, 'y':10, 'size':1, 'page': 1},
+	    {'x':120, 'y':10, 'size':2, 'page': 1},
+	    {'x':200, 'y':10, 'size':3, 'page': 1},
+	    
+		{'x':40, 'y':110, 'size':3, 'page': 1},
+	    {'x':120, 'y':110, 'size':4, 'page': 1},
+	    {'x':200, 'y':110, 'size':4, 'page': 1},
+	    
+		{'x':20, 'y':210, 'size':4, 'page': 1},
+	    {'x':120, 'y':210, 'size':4, 'page': 1},
+	    {'x':200, 'y':210, 'size':4, 'page': 1},
+	    
+		{'x':20, 'y':310, 'size':5, 'page':1},
+	    {'x':130, 'y':310, 'size':5, 'page':1},
+	    {'x':210, 'y':310, 'size':5, 'page':1},
+		
+		{'x':5, 'y':10, 'size':5, 'page': 2},
+	    {'x':100, 'y':10, 'size':5, 'page': 2},
+	    {'x':175, 'y':10, 'size':5, 'page': 2},
+	    
+		{'x':20, 'y':140, 'size':5, 'page': 2},
+	    {'x':110, 'y':140, 'size':5, 'page': 2},
+	    {'x':190, 'y':140, 'size':5, 'page': 2},
+	    
+		{'x':20, 'y':250, 'size':5, 'page': 2},
+	    {'x':110, 'y':250, 'size':5, 'page': 2},
+	    {'x':190, 'y':250, 'size':5, 'page': 2}
 	    ];
-
+	
 		
 function preLoad() {
 	for (var i = 0; i < colors.length; ++i) {
@@ -121,17 +130,19 @@ function choosePiece(event) {
 	var y = Math.floor( event.pageY - pos.y );
 
 	for ( var i = 0; i < pieceCanvasLocation.length; i++ ) {
-		var canvasLocation = pieceCanvasLocation[i];
-		if ( x >= canvasLocation.x
-			&& y >= canvasLocation.y 
-			&& x <= canvasLocation.x + canvasLocation.size * 20
-			&& y <= canvasLocation.y + canvasLocation.size * 20 ) {
-				if(player.pieces.indexOf(i) != -1)
-					chosenPieceId = i;
-				console.log("chosenPieceId", chosenPieceId);
-				drawPieceList();
-				break;
-			}
+			var canvasLocation = pieceCanvasLocation[i];
+			if ( x >= canvasLocation.x
+				&& y >= canvasLocation.y 
+				&& x <= canvasLocation.x + canvasLocation.size * 20
+				&& y <= canvasLocation.y + canvasLocation.size * 20
+				&& canvasLocation.page == piecePage) {
+					if(player.pieces.indexOf(i) != -1)
+						chosenPieceId = i;
+					console.log("chosenPieceId", chosenPieceId);
+					drawPieceList(piecePage);
+					break;
+				}
+		
 	}
 
 }
@@ -213,13 +224,13 @@ function drawOutline(event) {
 			var validPlacement = isValidPlacement(x,y,available[chosenPieceId]);
 
 			for ( var i = 0; i < available[chosenPieceId].length; i++ ) {
-				var pieceX = available[chosenPieceId][i].x + x;
-				var pieceY = y + available[chosenPieceId][i].y;
-				var fillColor = 'orange'
-				if(validPlacement) fillColor = 'green'
-				else if ( !isValidPosition({'x':pieceX, 'y':pieceY}) ) fillColor = 'red';
-				boardContext.fillStyle = fillColor;
-				boardContext.fillRect(pieceX*20, pieceY*20, 20, 20);
+					var pieceX = available[chosenPieceId][i].x + x;
+					var pieceY = y + available[chosenPieceId][i].y;
+					var fillColor = 'orange'
+					if(validPlacement) fillColor = 'green'
+					else if ( !isValidPosition({'x':pieceX, 'y':pieceY}) ) fillColor = 'red';
+					boardContext.fillStyle = fillColor;
+					boardContext.fillRect(pieceX*20, pieceY*20, 20, 20);
 			}
 			// draw the old location with correct items
 			// draw the new outline
@@ -258,7 +269,7 @@ function getLocation(event) {
 			else {
 				// Remove the selection box
 				chosenPieceId = -1;
-				drawPieceList();
+				drawPieceList(piecePage);
 				
 				// let the server tell me what board to draw
 			}
@@ -278,7 +289,8 @@ function pass() {
 }
 
 //Draw Piece List Function
-function drawPieceList(){
+function drawPieceList(page){
+	piecePage = page;
 	var pieceChoices = document.getElementById('pieceChoices');
 	var pieceContext = pieceChoices.getContext('2d');
 	pieceContext.clearRect(0, 0, pieceChoices.width, pieceChoices.height);
@@ -292,19 +304,21 @@ function drawPieceList(){
 	
 	var positionColor = (player.position>=0) ? player.position : 0;
 	for ( var i = 0; i < available.length; i++ ) {
-		// var pieceIndex = player.pieces[i];
-		var piece = available[i];
+		if(pieceCanvasLocation[i].page == page){
+			// var pieceIndex = player.pieces[i];
+			var piece = available[i];
 
-		for ( var j = 0; j < piece.length; j++ ) {
-			var point = piece[j];
-			var canvasLocation = pieceCanvasLocation[i];
-			var x = canvasLocation.x;
-			var y = canvasLocation.y;
-			
-			var xLoc = x + ( point.x * 20 );
-			var yLoc = y + ( point.y * 20 );	
-			if(player.pieces.indexOf(i) != -1)
-				pieceContext.drawImage( images[positionColor], xLoc, yLoc);
+			for ( var j = 0; j < piece.length; j++ ) {
+				var point = piece[j];
+				var canvasLocation = pieceCanvasLocation[i];
+				var x = canvasLocation.x;
+				var y = canvasLocation.y;
+				
+				var xLoc = x + ( point.x * 20 );
+				var yLoc = y + ( point.y * 20 );	
+				if(player.pieces.indexOf(i) != -1)
+					pieceContext.drawImage( images[positionColor], xLoc, yLoc);
+			}
 		}
 	}
 	
@@ -330,7 +344,7 @@ function rotate() {
 	    	}
 	    }
     	available[x] = replacementPiece;
-    	drawPieceList();
+    	drawPieceList(piecePage);
     }
 };
 
@@ -344,7 +358,7 @@ function flip() {
 	    	replacementPiece.push( {'x':point.y, 'y':point.x } );
     	}
     	available[x] = replacementPiece;
-    	drawPieceList();
+    	drawPieceList(piecePage);
 	}
 };
 
