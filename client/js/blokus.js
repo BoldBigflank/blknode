@@ -321,7 +321,7 @@ function drawPieceList(page){
 				
 				var xLoc = x + ( point.x * 20 );
 				var yLoc = y + ( point.y * 20 );	
-				if(player.pieces.indexOf(i) != -1)
+				if(player.pieces && player.pieces.indexOf(i) != -1)
 					pieceContext.drawImage( images[positionColor], xLoc, yLoc);
 			}
 		}
