@@ -128,7 +128,6 @@ function choosePiece(event) {
 			&& y <= canvasLocation.y + canvasLocation.size * 20 ) {
 				if(player.pieces.indexOf(i) != -1)
 					chosenPieceId = i;
-				console.log("chosenPieceId", chosenPieceId);
 				drawPieceList();
 				break;
 			}
@@ -361,7 +360,6 @@ function isValidPlacement(x,y,placement){
 		hasDiagonalConnector = hasDiagonalConnector || findDiagonalConnector(tile);
 
 		if(!isValidPosition(tile)){
-			console.log("isValidPlacement: No", tile.x, tile.y)
 			return false;
 		} 
 	}
@@ -392,16 +390,13 @@ function findDiagonalConnector(tile){
 function isValidPosition(tile){
 	// On the board
 	if(tile.x < 0 || tile.x >= boardWidth || tile.y < 0 || tile.y >= boardHeight){ 
-		console.log("On the board")
 		return false;
 	}
 	// Position is not open
 	if (game.board[tile.x][tile.y] !== null){ 
-		console.log("position not open", tile.x, tile.y, game.board[tile.x][tile.y])
 		return false;
 	}
 	if (hasFacingTile(tile)){
-		console.log("has facing tile") ;
 		return false;
 	}
 	return true;
