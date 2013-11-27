@@ -312,7 +312,9 @@ function drawPieceList(page){
 		var canvasLocation = pieceCanvasLocation[chosenPieceId];
 			
 		var thisPiece = available[chosenPieceId];
-		pieceContext.strokeRect(canvasLocation.x - 5, canvasLocation.y - 5, getMaxDimension(thisPiece) * 20 + 10, getMaxDimension(thisPiece) * 20 + 10);
+		if (canvasLocation.page == page){
+			pieceContext.strokeRect(canvasLocation.x - 5, canvasLocation.y - 5, getMaxDimension(thisPiece) * 20 + 10, getMaxDimension(thisPiece) * 20 + 10);
+		}
 	}
 	
 	var positionColor = (player.position>=0) ? player.position : 0;
@@ -327,12 +329,6 @@ function drawPieceList(page){
 			var canvasLocation = pieceCanvasLocation[i];
 			var x = canvasLocation.x + xOffset * 20;
 			var y = canvasLocation.y + yOffset * 20;
-			if ( i == 14 ) {
-				console.log({'xOffset': xOffset, 'yOffset':yOffset});
-				console.log({'max': getMaxDimension(piece),
-				'xMax':getMaxDimension(piece, 'x'),
-				'yMax':getMaxDimension(piece, 'y')});
-			}
 
 			for ( var j = 0; j < piece.length; j++ ) {
 				var point = piece[j];
