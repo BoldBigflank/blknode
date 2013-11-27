@@ -353,15 +353,8 @@ function rotate() {
 
     	for ( var i = 0; i < pieceToChange.length; i++ ) {
 	    	var point = pieceToChange[i];
-	    	replacementPiece.push( {'x':pieceToChange.length - point.y, 'y':point.x } );
-	    	minX = Math.min( minX, pieceToChange.length - point.y );
+	    	replacementPiece.push( {'x':getMaxDimension(pieceToChange, 'y') - 1 - point.y, 'y':point.x } );
     	}
-    	if ( minX > 0 ) {
-	    	for ( var i = 0; i < pieceToChange.length; i++ ) {
-		    	var point = pieceToChange[i];
-	    		replacementPiece[i].x = replacementPiece[i].x - minX;
-	    	}
-	    }
     	available[x] = replacementPiece;
     	drawPieceList(piecePage);
     }
