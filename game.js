@@ -99,7 +99,7 @@ exports.leave = function(gameId, uuid, cb){
                 }
             }
         }
-        cb(null, {players: game.players, state: game.state})
+        cb(null, {players: game.players, state: game.state, turn: game.turn})
     }
     // game.players = _.without(game.players, player)
 }
