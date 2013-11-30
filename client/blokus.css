@@ -11,3 +11,7 @@ body {
 #status {
 	margin-top: 50px;
 }
+
+.strong {
+	font-weight: bold;
+}

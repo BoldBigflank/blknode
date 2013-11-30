@@ -27,8 +27,9 @@ function updateGameView(gameObj){
 				player = thisPlayer;
 				drawPieceList(1);
 			}
+			var finishedClass = (thisPlayer.state != 'active') ? "strong" : "";
 			if(thisPlayer.state != "spectating")
-				$("ul.scoreboard").append("<li class='list-group-item'>" + thisPlayer.name + ": " + thisPlayer.score + "</li>");
+				$("ul.scoreboard").append("<li class='list-group-item " + finishedClass + "'>" + thisPlayer.name + ": " + thisPlayer.score + "</li>");
 		}
 		
 	}
