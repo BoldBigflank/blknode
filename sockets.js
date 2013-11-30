@@ -97,10 +97,10 @@ module.exports.listen = function(app){
       socket.on('pass', function(data){
         socket.get('uuid', function(err, uuid){
           socket.get('gameId', function(err, gameId){
-            game.pass(uuid, data, function(err, res){
+            game.leave(gameId, uuid, data, function(err, res){
               if (err) { socket.emit("alert", err) }
               else{ 
-                  io.sockets.emit(res.id, res )
+                  io.sockets.emit(gameId, res )
               }
             })
           })

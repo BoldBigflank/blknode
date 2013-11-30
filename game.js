@@ -175,18 +175,6 @@ function findDiagonalConnector(game, tile){
     return false;
 }
 
-exports.pass = function(gameId, uuid, state, cb){
-    var game = games[gameId];
-    // should also set this user's state to "passed"
-	// and if all four players have set "passed" then the game is over
-
-    do{
-        game.turn = (game.turn+1) % maxPlayers;
-    } while( _.findWhere(game.players, {position:game.turn}).state != "active" )
-
-    cb(null, {board: game.board, players: game.players, turn: game.turn});
-}
-
 exports.addPiece = function(gameId, id, placement, piece, cb){
     // cb(err, res)
     var game = games[gameId];
