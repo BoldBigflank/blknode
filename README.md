@@ -1,51 +1,26 @@
 ![GitHub Game Off Game Jam](https://f.cloud.github.com/assets/121322/1436486/25f88b78-4158-11e3-9b23-43596516362c.png)
 
-## The Challenge
+## BLKNODE - A Blokus Clone written in Node.js
 
-You have the entire month of November to create a **web-based** game *loosely* based on the theme "change".
+Manipulate (change) your pieces to fit onto a grid occupied by three other players.  There are only two rules:
+1. Your pieces must touch a corner of another of your pieces (or your assigned corner of the grid to start).
+2. Your pieces must not touch the face of your other pieces.  They can touch the face of other players' pieces.
 
-What do we mean by **loosely** based on "change"? We literally mean, *loosely* based. Some examples might be a FPS where you throw the [loose change](http://www.merriam-webster.com/dictionary/loose%20change) in your pockets at the enemy or perhaps a puzzle game where you have to [change](http://www.merriam-webster.com/dictionary/change) form to overcome obstacles.
+That's it!  Claim the most squares to win.  Get an extra 5 points if the last piece is the single square.
 
-Your game. Your rules. You can participate either as an individual or as a team. You're encouraged to use open source libraries, frameworks, graphics, and sounds in your game.
+## How to Play
 
-## The Prizes
+BLKNODE is a four player online game.  This means you will need to wait for three other players to start.  You can also open four windows to try it out.  
 
-We're giving away shiny new [iPad Airs](http://www.apple.com/ipad-air/) (16GB models) to our 5 lucky winners. Runners-up will receive a $100 credit for the [GitHub Shop](http://shop.github.com/), where they can grab some of our :octocat: shirts, hoodies, stickers, and more!
+Once the players have joined, players take turns placing tiles on the board.  Rotate and flip the pieces to place them on the board.
 
-All winners and runners-up will be showcased on our blog.
+When you are out of space to place pieces, or you give up, press "Pass".  This will end your turn, and you will not be given another turn.  When everyone passes, the game is over.  The player with the highest score wins.
 
-## Judging
+## The Team
 
-We have a handful of judges who are eager to play your games!  
+This game was made in a day, and made awesome in a week.  Our team met at the Microsoft Node Hackathon.
 
-* [Adam 'Atomic' Saltsman](https://twitter.com/adamatomic) - Game maker and dad, creator of Canabalt and Flixel.
-* [Aleissia Laidacker](https://twitter.com/Aleissia) - Team Lead AI at Ubisoft.
-* [David Czarnecki](http://twitter.com/CzarneckiD), Lead Engineer at Agora Games.
-* [Matt Hackett](https://twitter.com/richtaur), Co-founder of Lost Decade Games.
-* [Kyros Starr](https://twitter.com/bearwitched), Gaymer and Tech Writer at GitHub.
-* [Lee Reilly](http://twitter.com/leereilly), Gamer Dad and Software Developer at GitHub.
-* [Romana Ramzan](https://twitter.com/Manak/), Denki's Player Champion, Global Game Jam Director.
-
-## The Rules
-
-* To qualify for entry, you must fork the [github/game-off-2013](https://github.com/github/game-off-2013) repository to your individual or organization account. Not sure which account type would be best for you? Check out this handy [help article](https://help.github.com/articles/what-s-the-difference-between-user-and-organization-accounts), which explains the differences between the two types of accounts.
-* All entries must be web-based, i.e. playable in a browser. HTML5, WebGL, Unity, Torque 3D, and Flash are all possible - just be sure the source is made available on your fork.
-* You must be over the age of 13.
-
-## Instructions
-
-* If you don't already have a GitHub account, [sign up for a personal account now](https://github.com/signup/free) - it's free!
-* Fork the [github/game-off-2013](https://github.com/github/game-off-2013) repository to your individual account (or to a [free organization account](https://github.com/organizations/new)).
-* Be sure to follow [@github](https://twitter.com/github) on Twitter for updates.
-* Make sure your code is pushed to the master branch of your forked repository before Dec 1st!
-* Make sure you have a `README` file that includes a brief description of your game, what open source projects (if any) you used, and a screenshot.
-* Your repository should have a brief description and the playable URL entered into the fields shown below (this will make our judging process easier):
-
-![image](https://f.cloud.github.com/assets/121322/1436584/fd721126-415a-11e3-9f3a-e94262074573.png)
-
-## Comments / Questions / Help
-
-* New to Git, GitHub, and/or version control? Check out our [help documentation](https://help.github.com/) to get started!
-* Questions about Git/GitHub? Please email [support@github.com](mailto:support@github.com) and be sure to include 'GitHub Game Off' in the subject.
-* Questions specific to the GitHub Game Off? Please [create an issue](https://github.com/github/game-off-2013/issues/new). This will be the official FAQ.
-* The official Twitter hashtag is [#ggo13](https://twitter.com/search/realtime?q=%23ggo13).
+* [Alex Swan](https://github.com/BoldBigflank)
+* [Robbie Smith](https://github.com/robbiesmith)
+* [Nick Price](https://github.com/nprice22)
+* [Carter Rabasa](https://github.com/crabasa)
