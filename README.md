@@ -1,5 +1,3 @@
-![GitHub Game Off Game Jam](https://f.cloud.github.com/assets/121322/1436486/25f88b78-4158-11e3-9b23-43596516362c.png)
-
 ## BLKNODE - A Blokus Clone written in Node.js
 
 Manipulate (change) your pieces to fit onto a grid occupied by three other players.  There are only two rules:
