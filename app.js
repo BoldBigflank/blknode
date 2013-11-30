@@ -14,6 +14,7 @@ var io = require('./sockets').listen(app);
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
+  app.set('view options', {layout: false})
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
@@ -41,6 +42,13 @@ app.configure('production', function(){
             res.write(page);
             res.end();
         });
+  })
+
+  app.get('/play', function(req, res){
+    res.redirect('/play/0');
+  })
+  app.get('/play/:gameId', function(req, res){
+      res.render('index', {gameId: gameId})
   })
 
 var port = process.env.PORT || 3000

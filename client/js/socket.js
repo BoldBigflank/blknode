@@ -2,7 +2,8 @@ var socket = io.connect();
 var game = {};
 var player = {};
 
-socket.on('game', function(gameObj){
+function updateGameView(gameObj){
+	console.log("gameObj", gameObj)
 	game = _.extend(game, gameObj);
 	if(gameObj.players) game.players = gameObj.players;
 
@@ -31,8 +32,11 @@ socket.on('game', function(gameObj){
 		}
 		
 	}
+}
 
-})
+// socket.on('game', function(gameObj){
+// 	updateGameView(gameObj);
+// })
 
 socket.on('alert', function(message) {
 	$(".error").text(message).removeClass("hidden");
@@ -40,13 +44,18 @@ socket.on('alert', function(message) {
 });
 
 
-socket.emit('join', function(playerObj){
-	console.log("emitted join", playerObj);
-	player = playerObj
+socket.emit('join', function(data){
+	console.log("emitted join", data);
+	player = data.player
 	// playerId = playerObj.id;
 	// playerPosition = playerObj.position;
-	var spectating = (playerObj.state == 'spectating') ? " (Spectating)" : "";
-	$(".username").text(playerObj.name + spectating);
+	var spectating = (data.player.state == 'spectating') ? " (Spectating)" : "";
+	$(".username").text(data.player.name + spectating);
+	updateGameView(data.game);
+
+	socket.on(data.game.id, function(gameObj){
+		updateGameView(gameObj);
+	})
 
 	drawPieceList(1);
 });

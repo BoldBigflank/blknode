@@ -4,92 +4,39 @@ var EventEmitter = require('events').EventEmitter;
 
 exports.eventEmitter = new EventEmitter();
 
+
+var games=[];
+var players = [];
+
+var maxPlayers = 4;
+var boardWidth = 20;
+var boardHeight = 20;
+var names;
+var questions;
+
 var newBoard = function(){
-    var r = []; while(r.push(null) < 20); // Make a row of 20 0's
-    var a = []; while(a.push(r.slice(0)) < 20); // Make 20 rows
+    var r = []; while(r.push(null) < boardWidth); // Make a row of 20 0's
+    var a = []; while(a.push(r.slice(0)) < boardHeight); // Make 20 rows
     return a;
 }
 
-var game;
-var boardWidth;
-var boardHeight;
-
-var maxPlayers = 4;
-var answers = []
-var names
-var questions
-
-
 var init = function(cb){
-    game = {
-        board:newBoard(),
-        players:[],
-        turn:null,
-        state:"prep"
-    }
-    boardWidth = game.board.length;
-    boardHeight = game.board[0].length;
-    
     fs.readFile('names.txt', function(err, data) {
         if(err) throw err;
         names = data.toString().split("\n");
     });
 }
 
-newRound = function(cb){
-    // Find the round's winner
-    if(game.players.length > 0){
-        var winningPlayer = _.max(game.players, function(player){
-            return player.score
-        })
-        if(winningPlayer){
-            var winner = {
-                name: winningPlayer.name
-                , title: game.title
-                , score: winningPlayer.score
-                , id: winningPlayer.id
-            }
-            game.winner = winner
-        }
+var newGame = function(cb){
+    var game = {
+        id:games.length,
+        board:newBoard(),
+        players:[],
+        turn:null,
+        state:"prep"
     }
-    // Remove the current entries from the players
-    for(var index in game.players){
-        var player = game.players[index]
-        player.answer = null;
-        player.answerScore = 0;
-        game.players[index] = player
-    }
-
-    // Refresh when out of questions
-    if(questions.length<1){
-        fs.readFile('questions.txt', function(err, data) {
-            if(err) throw err;
-            questions = _.shuffle(data.toString().split("\n"));
-        });
-    }
-    
-    var questionArray = questions.shift().split("|");
-    game.title = questionArray.shift();
-    game.round++ ;
-    game.correctAnswer = questionArray[0];
-    game.answers = _.shuffle(questionArray);
-
-    game.state = "prep"; // DEBUG: Make prep first in prod
-    setTimeout(function(){
-        console.log("timer 1 ended")
-        exports.setState('active', function(err, res){
-            if(!err)
-                exports.eventEmitter.emit('state', res)
-        })
-    }, prepTime);
-    setTimeout(function(){
-        console.log("timer 2 ended")
-        exports.setState('ended', function(err, res){
-            if(!err)
-                exports.eventEmitter.emit('state', res)
-        })
-    }, prepTime + roundTime);
-    cb()
+    games.push(game);
+    return game;
 }
 
 exports.join = function(uuid, cb){
@@ -97,8 +44,13 @@ exports.join = function(uuid, cb){
         cb("UUID not found")
         return
     }
+    var game = _.find(games, function(game){ return game.state == "prep" });
+    if(typeof game == "undefined") {
+        game = newGame();
+        games.push(game);
+    }
     // game.now = new Date().getTime()
-    var player = _.find(game.players, function(player){ return player.id == uuid })
+    var player = _.findWhere( game.players, {id: uuid} )
     if( typeof player === 'undefined'){
         var player = {
             id: uuid
@@ -108,27 +60,30 @@ exports.join = function(uuid, cb){
             , position:-1
             , score: 0
         }
-        if(_.where(game.players, {state:'active'}).length >= maxPlayers) player.state = 'spectating';
-
-        game.players.push(player)
-        if(_.where(game.players, {state:'active'}).length == maxPlayers){
-            game.state = 'active'
-            // Add the players to playerOrder
-            var playerNumber = 0;
-            for( var i in game.players){
-                var player = game.players[i]
-                if(player.state == 'active'){
-                    player.position = playerNumber++;
-                    player.name = "Player " + (player.position+1);
-                } 
-            }
-            game.turn = 0
-        }
     }
-    cb(null, {players: game.players, turn: game.turn, state:game.state})
+    var gameId = _.find()
+    if(_.where(game.players, {state:'active'}).length >= maxPlayers) player.state = 'spectating';
+
+    players.push(player); // All players
+    game.players.push(player); // Players for the game
+    if(_.where(game.players, {state:'active'}).length == maxPlayers){
+        game.state = 'active'
+        // Add the players to playerOrder
+        var playerNumber = 0;
+        for( var i in game.players){
+            var player = game.players[i]
+            if(player.state == 'active'){
+                player.position = playerNumber++;
+                player.name = "Player " + (player.position+1);
+            } 
+        }
+        game.turn = 0
+    }
+    cb(null, game)
 }
 
-exports.leave = function(uuid, cb){
+exports.leave = function(gameId, uuid, cb){
+    var game = games[gameId];
     // Remove their player
     var player = _.find(game.players, function(player){ return player.id == uuid })
     if(player){
@@ -149,17 +104,15 @@ exports.leave = function(uuid, cb){
     // game.players = _.without(game.players, player)
 }
 
-exports.getAnswers = function(){ return answers }
-
 exports.getGame = function(){ return game }
 
 exports.getScores = function(){
     return _.map(game.players, function(val, key){ return { id:val.id, name:val.name, score:val.score }; })
 }
 
-exports.getPlayers = function(){ return game.players }
+exports.getPlayers = function(){ return players }
 
-exports.getPlayer = function(uuid){ return _.find(game.players, function(player){ return player.id == uuid })}
+exports.getPlayer = function(uuid){ return _.find(players, function(player){ return player.id == uuid })}
 
 exports.getState = function(){ return game.state }
 
@@ -175,7 +128,6 @@ exports.getScoreboard = function(){
         title: game.title
         , scores: _.map(game.players, function(val, key){ return { id:val.id, name:val.name, score:val.score }; })
         , players: game.players.length
-        , answers: answers.length
     }
 
 }
@@ -186,42 +138,7 @@ exports.setName = function(id, name, cb){
     cb(null, { players: game.players })
 }
 
-exports.setState = function(state, cb){
-    if(state==game.state) return cb("Already on this state")
-    // Only start new rounds when the last is done
-    if(game.state != "ended" && state == "prep") return cb("Only start new rounds when the last is done")
-
-    // entry, vote, result
-    game.state = state
-    // game.now = new Date().getTime()
-    if(state=="prep"){ // New round
-        // game.help = "Be prepared to list answers that fit the following category."
-        newRound(function(){
-            cb(null, game)
-        });
-    }
-    else if (state == "active"){
-        // game.help = "List items that fit the category."
-        cb(null, game)
-    }
-    else if (state == "ended"){
-        
-        // Apply the scores to the winners
-        _.each(game.players, function(player){
-            if(player.answer == game.correctAnswer) player.score += player.answerScore;
-        })
-
-        game.players = _.sortBy(game.players, function(player){return -1 *  player.score;});
-        // game.help = "The round has ended.  Click 'New Round' to begin."
-        cb(null, game)
-    }
-    else{
-        // game.help = "";
-        cb(null, game)
-    }
-}
-
-function hasFacingTile(tile){
+function hasFacingTile(game, tile){
     var x = tile.x;
     var y = tile.y;
     console.log("(" + x + "," + y + ")" + (x+y) );
@@ -237,7 +154,7 @@ function hasFacingTile(tile){
     return false;
 }
 
-function findDiagonalConnector(tile){
+function findDiagonalConnector(game, tile){
     var x = tile.x;
     var y = tile.y;
 
@@ -258,12 +175,13 @@ function findDiagonalConnector(tile){
     return false;
 }
 
-exports.pass = function(state, cb){
+exports.pass = function(gameId, uuid, state, cb){
     cb("Not yet implemented", null);
 }
 
-exports.addPiece = function(id, placement, piece, cb){
+exports.addPiece = function(gameId, id, placement, piece, cb){
     // cb(err, res)
+    var game = games[gameId];
     var player = _.findWhere(game.players, {position:game.turn})
 
     if(game.state != "active"){
@@ -296,11 +214,11 @@ exports.addPiece = function(id, placement, piece, cb){
         }
 
 
-        if ( hasFacingTile( tile ) == true) {
+        if ( hasFacingTile(game, tile ) == true) {
             cb("This placement has a facing tile at " + tile.x + tile.y, null)
             return;
         };
-        hasDiagonalConnector = hasDiagonalConnector || findDiagonalConnector(tile);
+        hasDiagonalConnector = hasDiagonalConnector || findDiagonalConnector(game, tile);
 
         // Make sure each position is open
         if(game.board[tile.x][tile.y] !== null){
