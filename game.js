@@ -89,15 +89,17 @@ exports.leave = function(gameId, uuid, cb){
     if(player){
         if(player.state != "spectating") player.state = "disconnect";
         // If only one active player left, end the game
-        if(_.where(game.players, {state:'active'}).length <= 1){
-            game.state = "ended";
-        }
-        else { // Make sure it is an active person's turn
-            if(game.state == 'active'){
+        if(game.state == "active"){
+            if(_.where(game.players, {state:'active'}).length <= 1)
+                game.state = "ended";
+            else {
                 while(_.findWhere(game.players, {position:game.turn}).state != 'active'){
                     game.turn = (game.turn+1) % game.players.length;
                 }
             }
+        } else if(game.state == "prep") {
+            // Remove players from games that haven't started
+            game.players = _.without(game.players, player);
         }
         cb(null, {players: game.players, state: game.state, turn: game.turn})
     }
