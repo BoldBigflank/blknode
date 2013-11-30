@@ -77,36 +77,35 @@ function handleKeyPress(e){
 
 	    // where each piece appers on the 'choose piece' canvas
 	    var pieceCanvasLocation = [
-	    {'x':40, 'y':10, 'size':1, 'page': 1},
-	    {'x':120, 'y':10, 'size':2, 'page': 1},
-	    {'x':200, 'y':10, 'size':3, 'page': 1},
+	    {'x':40, 'y':10, 'page': 1},
+	    {'x':120, 'y':10, 'page': 1},
+	    {'x':200, 'y':10, 'page': 1},
 	    
-		{'x':40, 'y':110, 'size':3, 'page': 1},
-	    {'x':120, 'y':110, 'size':4, 'page': 1},
-	    {'x':200, 'y':110, 'size':4, 'page': 1},
+		{'x':40, 'y':110, 'page': 1},
+	    {'x':120, 'y':110, 'page': 1},
+	    {'x':200, 'y':110, 'page': 1},
 	    
-		{'x':20, 'y':210, 'size':4, 'page': 1},
-	    {'x':120, 'y':210, 'size':4, 'page': 1},
-	    {'x':200, 'y':210, 'size':4, 'page': 1},
+		{'x':20, 'y':210, 'page': 1},
+	    {'x':120, 'y':210, 'page': 1},
+	    {'x':200, 'y':210, 'page': 1},
 	    
-		{'x':20, 'y':310, 'size':5, 'page':1},
-	    {'x':130, 'y':310, 'size':5, 'page':1},
-	    {'x':210, 'y':310, 'size':5, 'page':1},
+		{'x':20, 'y':310, 'page':1},
+	    {'x':130, 'y':310, 'page':1},
+	    {'x':210, 'y':310, 'page':1},
 		
-		{'x':5, 'y':10, 'size':5, 'page': 2},
-	    {'x':100, 'y':10, 'size':5, 'page': 2},
-	    {'x':175, 'y':10, 'size':5, 'page': 2},
+		{'x':5, 'y':10, 'page': 2},
+	    {'x':100, 'y':10, 'page': 2},
+	    {'x':175, 'y':10, 'page': 2},
 	    
-		{'x':20, 'y':140, 'size':5, 'page': 2},
-	    {'x':110, 'y':140, 'size':5, 'page': 2},
-	    {'x':190, 'y':140, 'size':5, 'page': 2},
+		{'x':20, 'y':140, 'page': 2},
+	    {'x':110, 'y':140, 'page': 2},
+	    {'x':190, 'y':140, 'page': 2},
 	    
-		{'x':20, 'y':250, 'size':5, 'page': 2},
-	    {'x':110, 'y':250, 'size':5, 'page': 2},
-	    {'x':190, 'y':250, 'size':5, 'page': 2}
+		{'x':20, 'y':250, 'page': 2},
+	    {'x':110, 'y':250, 'page': 2},
+	    {'x':190, 'y':250, 'page': 2}
 	    ];
 	
-		
 function preLoad() {
 	for (var i = 0; i < colors.length; ++i) {
 		images[i] = new Image();
@@ -114,16 +113,22 @@ function preLoad() {
 	}
 }
 
-function getMaxDimension(piece){
+function getMaxDimension(piece, direction){
 	var maxSize = 0;
 
-	for ( var i = 0; i < piece.length; i++ ) {
-		var point = piece[i];
-		if ( point.x > maxSize ) {
-			maxSize = point.x;
-		}
-		if ( point.y > maxSize ) {
-			maxSize = point.y;
+	if ( piece != null ) {
+		for ( var i = 0; i < piece.length; i++ ) {
+			var point = piece[i];
+			if ( direction == null || direction == 'x' ) {
+				if ( point.x > maxSize ) {
+					maxSize = point.x;
+				}
+			}
+			if ( direction == null || direction == 'y' ) {
+				if ( point.y > maxSize ) {
+					maxSize = point.y;
+				}
+			}
 		}
 	}
 	
@@ -143,8 +148,8 @@ function choosePiece(event) {
 		var canvasLocation = pieceCanvasLocation[i];
 		if ( x >= canvasLocation.x
 			&& y >= canvasLocation.y 
-			&& x <= canvasLocation.x + canvasLocation.size * 20
-			&& y <= canvasLocation.y + canvasLocation.size * 20
+			&& x <= canvasLocation.x + getMaxDimension(available[i]) * 20
+			&& y <= canvasLocation.y + getMaxDimension(available[i]) * 20
 			&& canvasLocation.page == piecePage) {
 				if(player.pieces.indexOf(i) != -1)
 					chosenPieceId = i;
@@ -222,8 +227,8 @@ function drawOutline(event) {
 
 	if ( chosenPieceId != -1 ) {
 		var pos = findPos(this);
-		var x = Math.floor( ( event.pageX - pos.x) / 20 );
-		var y = Math.floor( ( event.pageY - pos.y ) / 20 );
+		var x = Math.floor( ( event.pageX - pos.x ) / 20 - ( getMaxDimension(available[chosenPieceId], 'x') / 2 ) );
+		var y = Math.floor( ( event.pageY - pos.y ) / 20 - ( getMaxDimension(available[chosenPieceId], 'y') / 2 ) );
 		if ( x != outlineX || y != outlineY ) {
 			// draw the overlay back to original
 			removeOutline(event);
@@ -257,8 +262,8 @@ function getLocation(event) {
 	
 	event = event || window.event;
 	var pos = findPos(this);	
-	var x = Math.floor( ( event.pageX - pos.x) / 20 );
-	var y = Math.floor( ( event.pageY - pos.y ) / 20 );
+	var x = Math.floor( ( event.pageX - pos.x ) / 20 - ( getMaxDimension(available[chosenPieceId], 'x') / 2 ) );
+	var y = Math.floor( ( event.pageY - pos.y ) / 20 - ( getMaxDimension(available[chosenPieceId], 'y') / 2 ) );
 
 
 	var thisPiece = [];
@@ -307,7 +312,9 @@ function drawPieceList(page){
 		var canvasLocation = pieceCanvasLocation[chosenPieceId];
 			
 		var thisPiece = available[chosenPieceId];
-		pieceContext.strokeRect(canvasLocation.x - 5, canvasLocation.y - 5, getMaxDimension(thisPiece) * 20 + 10, getMaxDimension(thisPiece) * 20 + 10);
+		if (canvasLocation.page == page){
+			pieceContext.strokeRect(canvasLocation.x - 5, canvasLocation.y - 5, getMaxDimension(thisPiece) * 20 + 10, getMaxDimension(thisPiece) * 20 + 10);
+		}
 	}
 	
 	var positionColor = (player.position>=0) ? player.position : 0;
@@ -316,11 +323,15 @@ function drawPieceList(page){
 			// var pieceIndex = player.pieces[i];
 			var piece = available[i];
 
+			var xOffset = Math.floor( ( getMaxDimension(piece) - getMaxDimension(piece, 'x') ) / 2 );
+			var yOffset = Math.floor( ( getMaxDimension(piece) - getMaxDimension(piece, 'y') ) / 2 );
+
+			var canvasLocation = pieceCanvasLocation[i];
+			var x = canvasLocation.x + xOffset * 20;
+			var y = canvasLocation.y + yOffset * 20;
+
 			for ( var j = 0; j < piece.length; j++ ) {
 				var point = piece[j];
-				var canvasLocation = pieceCanvasLocation[i];
-				var x = canvasLocation.x;
-				var y = canvasLocation.y;
 				
 				var xLoc = x + ( point.x * 20 );
 				var yLoc = y + ( point.y * 20 );	
@@ -342,15 +353,8 @@ function rotate() {
 
     	for ( var i = 0; i < pieceToChange.length; i++ ) {
 	    	var point = pieceToChange[i];
-	    	replacementPiece.push( {'x':pieceToChange.length - point.y, 'y':point.x } );
-	    	minX = Math.min( minX, pieceToChange.length - point.y );
+	    	replacementPiece.push( {'x':getMaxDimension(pieceToChange, 'y') - 1 - point.y, 'y':point.x } );
     	}
-    	if ( minX > 0 ) {
-	    	for ( var i = 0; i < pieceToChange.length; i++ ) {
-		    	var point = pieceToChange[i];
-	    		replacementPiece[i].x = replacementPiece[i].x - minX;
-	    	}
-	    }
     	available[x] = replacementPiece;
     	drawPieceList(piecePage);
     }
