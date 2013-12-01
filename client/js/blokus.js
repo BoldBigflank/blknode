@@ -9,8 +9,6 @@ var piecePage = 1;
 window.onload = function () {
 	var boardElem = document.getElementById('boardCanvas');
 	var pieceChoices = document.getElementById('pieceChoices');
-	var button1 = document.getElementById("buttonOne");
-	var button2 = document.getElementById("buttonTwo");
 	var pieceContext = pieceChoices.getContext('2d');
 	var context = boardElem.getContext('2d');
 	
@@ -20,32 +18,11 @@ window.onload = function () {
 	
    drawGrid();
    
-   button1.onclick = makeBold;
-   button2.onclick = makeBold;
    boardElem.onclick = getLocation;
    pieceChoices.onclick = choosePiece;
    boardElem.onmousemove = drawOutline;
    boardElem.onmouseout = removeOutline;
    window.onkeypress = handleKeyPress;
-}
-
-//Shows which pieceList page is selected by changing button style.
-function makeBold() {
-	var button1 = document.getElementById("buttonOne");
-	var button2 = document.getElementById("buttonTwo");
-	
-	this.style.fontWeight = "bold";
-	this.style.color = "red"
-	
-	if(this == button1) {
-		button2.style.fontWeight = "normal";
-		button2.style.color = "black";
-		drawPieceList(1);
-	}else if (this == button2) {
-		button1.style.fontWeight = "normal";
-		button1.style.color = "black";
-		drawPieceList(2);
-	}
 }
 
 function handleKeyPress(e){
@@ -327,6 +304,15 @@ function pass() {
 
 //Draw Piece List Function
 function drawPieceList(page){
+	// Change the button list classes
+	if(page==1){
+		$("#buttonOne").addClass("active")
+		$("#buttonTwo").removeClass("active")
+	} else {
+		$("#buttonOne").removeClass("active")
+		$("#buttonTwo").addClass("active")
+	}
+
 	piecePage = page;
 	var pieceChoices = document.getElementById('pieceChoices');
 	var pieceContext = pieceChoices.getContext('2d');

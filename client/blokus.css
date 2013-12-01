@@ -16,7 +16,7 @@ body {
 	font-weight: bold;
 }
 
-#buttonOne {
-	color: red;
+a.active {
+	color: red!important;
 	font-weight: bold;
 }
