@@ -20,3 +20,7 @@ a.active {
 	color: red!important;
 	font-weight: bold;
 }
+
+#boardCanvas, #pieceChoices {
+	border: 2px solid black;
+}
