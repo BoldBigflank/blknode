@@ -15,3 +15,8 @@ body {
 .strong {
 	font-weight: bold;
 }
+
+#buttonOne {
+	color: red;
+	font-weight: bold;
+}

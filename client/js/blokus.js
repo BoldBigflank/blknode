@@ -9,6 +9,8 @@ var piecePage = 1;
 window.onload = function () {
 	var boardElem = document.getElementById('boardCanvas');
 	var pieceChoices = document.getElementById('pieceChoices');
+	var button1 = document.getElementById("buttonOne");
+	var button2 = document.getElementById("buttonTwo");
 	var pieceContext = pieceChoices.getContext('2d');
 	var context = boardElem.getContext('2d');
 	
@@ -17,11 +19,33 @@ window.onload = function () {
 	images[3].onload = function(){ drawPieceList(1)};
 	
    drawGrid();
+   
+   button1.onclick = makeBold;
+   button2.onclick = makeBold;
    boardElem.onclick = getLocation;
    pieceChoices.onclick = choosePiece;
    boardElem.onmousemove = drawOutline;
    boardElem.onmouseout = removeOutline;
    window.onkeypress = handleKeyPress;
+}
+
+//Shows which pieceList page is selected by changing button style.
+function makeBold() {
+	var button1 = document.getElementById("buttonOne");
+	var button2 = document.getElementById("buttonTwo");
+	
+	this.style.fontWeight = "bold";
+	this.style.color = "red"
+	
+	if(this == button1) {
+		button2.style.fontWeight = "normal";
+		button2.style.color = "black";
+		drawPieceList(1);
+	}else if (this == button2) {
+		button1.style.fontWeight = "normal";
+		button1.style.color = "black";
+		drawPieceList(2);
+	}
 }
 
 function handleKeyPress(e){
