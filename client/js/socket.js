@@ -13,9 +13,28 @@ function updateGameView(gameObj){
 	}
 	if(game.state == "prep")
 		$(".status").text("Waiting for more players to join").removeClass("hidden");
-	else if(game.state == "ended")
-		$(".status").text("Game Over!").removeClass("hidden");
-	else{
+	
+	//Some what repetitive but allows for multiple winners.	
+	else if(game.state == "ended") {
+		var players = game.players
+		var highestScore = 0;
+		var winnerCount = 0;
+		var winnerText = "";
+		
+		for ( var i = 0; i < players.length; i++ ) {
+			if (players[i].score > highestScore){
+				highestScore = players[i].score;
+			}
+		}
+
+		for ( var i = 0; i < players.length; i++) {
+			if (players[i].score == highestScore) {
+				winnerText += " "+ players[i].name + " wins!"; 
+			}
+		}
+		
+		$(".status").text("Game Over! " + winnerText).removeClass("hidden");
+	}else{
 		$(".status").text("It is currently Player " + (game.turn + 1) + "'s turn").removeClass("hidden");
 	}
 	if(game.state == "active") {
