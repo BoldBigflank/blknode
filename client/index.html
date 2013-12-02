@@ -27,11 +27,16 @@
 	    </div>
 		<div class="container">
 			<div class="row">
-					<div class="col-md-3 text-center">
-						<h2>Scoreboard</h2>
-						<ul class="list-group scoreboard">
-						<li class="list-group-item"></li>
-						</ul>
+
+					<div class="col-md-4 text-center">
+						<h2>Available Pieces</h2>
+						<canvas id="pieceChoices" width="280" height="400">
+							Your browser does not support canvas.
+						</canvas>
+						<div class="btn-group">
+							<a class="btn btn-default active" id="buttonOne" href="#" onclick='javascript:drawPieceList(1);' >1</a>
+							<a class="btn btn-default" id="buttonTwo" href="#" onclick='javascript:drawPieceList(2);'>2</a>
+						</div>
 					</div>
 					
 					<div class = "col-md-6 text-center">
@@ -46,17 +51,15 @@
 							<a class="btn btn-default" href="#" onclick="javascript:flip();"><span class="glyphicon glyphicon-resize-vertical"> Flip (F)</span></a>
 						</div>
 					</div>
-					
-					<div class="col-md-3 text-center">
-						<h2>Available Pieces</h2>
-						<canvas id="pieceChoices" width="280" height="400">
-							Your browser does not support canvas.
-						</canvas>
-						<div class="btn-group">
-							<a class="btn btn-default active" id="buttonOne" href="#" onclick='javascript:drawPieceList(1);' >1</a>
-							<a class="btn btn-default" id="buttonTwo" href="#" onclick='javascript:drawPieceList(2);'>2</a>
-						</div>
-					</div>
+			
+				<div class="col-md-2 text-center">
+					<h2>Scoreboard</h2>
+					<ul class="list-group scoreboard">
+						<li class="list-group-item"></li>
+					</ul>
+				</div>
+
+			
 			</div>
 			<div class="row" id="status">
 				<div class="status hidden alert alert-info">...</div>
